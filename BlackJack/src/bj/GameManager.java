@@ -14,7 +14,7 @@ public class GameManager {
 			System.out.println("player: " + game1.player.showHand() + game1.player.handValue());
 			System.out.println("dealer: " + game1.dealer.showHand() + game1.dealer.handValue());
 			int kelet = s.nextInt();
-			if (kelet == 1)
+			if (kelet == 1)//dfsdf
 			{
 				game1.playerHit();
 			}
