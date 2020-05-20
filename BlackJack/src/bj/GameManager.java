@@ -7,8 +7,6 @@ public class GameManager {
 		Scanner s = new Scanner(System.in);
 		GameManager game1 = new GameManager();
 		game1.startTurn(100);
-		System.out.println("player: " + game1.player.showHand() + game1.player.handValue());
-		System.out.println("dealer: " + game1.dealer.showHand() + game1.dealer.handValue());
 		while (true)
 		{
 			System.out.println("player: " + game1.player.showHand() + game1.player.handValue());
