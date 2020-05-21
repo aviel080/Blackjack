@@ -26,4 +26,12 @@ public class User implements Serializable  {
 		User user = (User)obj;
 		return this.userName.equals(user.userName);
 	}
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return userName.hashCode();
+	}
+	public String getPassword() {
+		return password;
+	}
 }
