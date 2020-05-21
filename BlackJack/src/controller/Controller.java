@@ -1,6 +1,14 @@
 package controller;
 
+import model.*;
+import view.GameView;
+
 public class Controller {
+	private static User user;
+	public static void main(String[] args) 
+	{
+		GameView.mainScreen();
+	}
 	public int hitController()
 	{
 		return 0;
@@ -21,13 +29,34 @@ public class Controller {
 	{
 		
 	}
-	public void loginController()
+	public static void loginController()
 	{
-		
+		StringBuilder username = new StringBuilder();
+		StringBuilder password = new StringBuilder();
+		GameView.LoginScreen(username,password);
+		LoginManager sum = new LoginManager();
+		try {
+			user = sum.userLogin(username,password);
+			System.out.println("Login Succsefully");
+			//toplay(user)
+		}catch(Exception e){
+			System.out.println(e.toString());
+		}
+		GameView.mainScreen();
 	}
-	public void signupController()
+	public static void signupController()
 	{
-		
+		StringBuilder username = new StringBuilder();
+		StringBuilder password = new StringBuilder();
+		GameView.SignUpScreen(username,password);
+		SignUpManager sum = new SignUpManager();
+		try {
+			sum.signNewUser(username,password);
+			System.out.println("User Added Succsefully");
+		}catch(Exception e){	
+			System.out.println(e.toString());
+		}
+		GameView.mainScreen();
 	}
 	public void playController()
 	{

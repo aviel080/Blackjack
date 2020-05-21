@@ -4,25 +4,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class SignUpManager {
-	public static void main3(String[] args) 
-	{
-		SignUpManager sum = new SignUpManager();
-		try {
-			sum.signNewUser("dudi","654645");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	}
+
 	private Set<User> users = new HashSet<User>();
-	public void signNewUser(String userName,String password) throws Exception
+	public void signNewUser(StringBuilder userName,StringBuilder password) throws Exception
 	{
-		userNameValidation(userName);
-		passwordValidation(password);
-		userNameAvailable(userName);
-		User newUser = new User(userName,password);
+		userNameValidation(userName.toString());
+		passwordValidation(password.toString());
+		userNameAvailable(userName.toString());
+		User newUser = new User(userName.toString(),password.toString());
 		users.add(newUser);
 		FileManager.write(users);
-		System.out.println("User Added Succsefully");
 		//Write to file;	
 	}	
 	private void userNameValidation(String userName)throws Exception
