@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class LoginManager {
-	public static void main(String[] args) 
+	public static void main4(String[] args) 
 	{
 		LoginManager sum = new LoginManager();
 		try {
