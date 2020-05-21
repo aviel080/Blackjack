@@ -1,4 +1,4 @@
-package bj;
+package model;
 
 import java.util.*;
 public class GameManager {
