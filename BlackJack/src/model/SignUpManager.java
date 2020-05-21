@@ -1,13 +1,28 @@
 package model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class SignUpManager {
-	
+	public static void main(String[] args) 
+	{
+		SignUpManager sum = new SignUpManager();
+		try {
+			sum.signNewUser("dudi","654645");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	private Set<User> users = new HashSet<User>();
 	public void signNewUser(String userName,String password) throws Exception
 	{
 		userNameValidation(userName);
 		passwordValidation(password);
 		userNameAvailable(userName);
-		User newUser = new User (userName,password);
+		User newUser = new User(userName,password);
+		users.add(newUser);
+		FileManager.write(users);
+		System.out.println("User Added Succsefully");
 		//Write to file;	
 	}	
 	private void userNameValidation(String userName)throws Exception
@@ -28,7 +43,9 @@ public class SignUpManager {
 	
 	private void userNameAvailable(String userName)throws Exception
 	{
-		throw new Exception("null ID");
+		users = FileManager.read();
+		User checkUser = new User(userName, "");
+		if (users.contains(checkUser))
+			throw new Exception("Username Already In Use");		
 	}
-
 }

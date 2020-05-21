@@ -1,4 +1,4 @@
-package model;
+package controller;
 
 public class Controller {
 	public int hitController()

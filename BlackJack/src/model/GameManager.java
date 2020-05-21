@@ -2,7 +2,7 @@ package model;
 
 import java.util.*;
 public class GameManager {
-	public static void main(String[] args) 
+	public static void main1(String[] args) 
 	{
 		Scanner s = new Scanner(System.in);
 		GameManager game1 = new GameManager();

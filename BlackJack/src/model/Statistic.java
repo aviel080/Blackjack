@@ -1,6 +1,9 @@
 package model;
 
-public class Statistic {
+import java.io.Serializable;
+
+public class Statistic implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private int gamesWin;
 	private int gamesLose;
 	private int gamesTie;
