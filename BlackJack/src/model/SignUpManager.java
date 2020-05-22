@@ -6,12 +6,12 @@ import java.util.Set;
 public class SignUpManager {
 
 	private Set<User> users = new HashSet<User>();
-	public void signNewUser(StringBuilder userName,StringBuilder password) throws Exception
+	public void signNewUser(String userName,String password) throws Exception
 	{
-		userNameValidation(userName.toString());
-		passwordValidation(password.toString());
-		userNameAvailable(userName.toString());
-		User newUser = new User(userName.toString(),password.toString());
+		userNameValidation(userName);
+		passwordValidation(password);
+		userNameAvailable(userName);
+		User newUser = new User(userName,password);
 		users.add(newUser);
 		FileManager.write(users);
 		//Write to file;	

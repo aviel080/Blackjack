@@ -36,7 +36,7 @@ public class Controller {
 		GameView.LoginScreen(username,password);
 		LoginManager sum = new LoginManager();
 		try {
-			user = sum.userLogin(username,password);
+			user = sum.userLogin(username.toString(),password.toString());
 			System.out.println("Login Succsefully");
 			//toplay(user)
 		}catch(Exception e){
@@ -51,7 +51,7 @@ public class Controller {
 		GameView.SignUpScreen(username,password);
 		SignUpManager sum = new SignUpManager();
 		try {
-			sum.signNewUser(username,password);
+			sum.signNewUser(username.toString(),password.toString());
 			System.out.println("User Added Succsefully");
 		}catch(Exception e){	
 			System.out.println(e.toString());
