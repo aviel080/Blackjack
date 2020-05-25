@@ -36,8 +36,17 @@ public class Hand {
 		String result = "";
 		for(Card card : handCards)
 		{
-			result += card.getValue() + " " + card.getSign() + " ";  
+			result += "[" + card.getPicture() + " " + card.getSign() + "] ";  
 		}
+		result += "Value: ";
 		return result;
+	}
+	public Card getCard(int index)
+	{
+		return handCards.get(index);
+	}
+	public int handSize()
+	{
+		return handCards.size();
 	}
 }

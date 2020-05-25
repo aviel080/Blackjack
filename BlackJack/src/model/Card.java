@@ -2,13 +2,31 @@ package model;
 
 public class Card {
 	private int number;
+	private String picture;
 	private String sign;
 	private int value;
 	public Card(int number, String sign)
 	{
 		this.number = number;
+		this.picture = trueNumber(number);
 		this.sign = sign;
 		value = calcValue();
+	}
+	private String trueNumber(int number)
+	{
+		switch(number)
+		{
+		case 1:
+		return "A";
+		case 11:
+		return "J";
+		case 12:
+		return "Q";
+		case 13:
+		return "K";
+		default:
+		return String.valueOf(number);
+		}
 	}
 	private int calcValue()
 	{
@@ -21,6 +39,9 @@ public class Card {
 	}
 	public int getNumber() {
 		return number;
+	}
+	public String getPicture() {
+		return picture;
 	}
 	public int getValue(){
 		return value;

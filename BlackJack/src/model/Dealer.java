@@ -22,4 +22,12 @@ public class Dealer {
 	{
 		return hand.returnHand();
 	}
+	public Card getCard(int index)
+	{
+		return hand.getCard(index);
+	}
+	public int handSize()
+	{
+		return hand.handSize();
+	}
 }

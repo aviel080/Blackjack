@@ -1,12 +1,26 @@
 package model;
 
 public class ChargeManager {
-	public void Withdraw(User user,int amount)throws Exception {
-		if(user.getBalance() < amount)
-			throw new Exception("Balance too low");
-		user.addBalance(-amount);
+	public static void Withdraw(User user,String amount)throws Exception {
+		for (char a : amount.toCharArray())
+		{
+			if (Character.isDigit(a) == false)
+				throw new Exception("Invalid Amount");
+		}
+		int validAmount = Integer.parseInt(amount);
+		if (validAmount > user.getBalance())
+			throw new Exception("Amount Less Than Money");
+		user.addBalance(-validAmount);
+		FileManager.Update(user);
 	}
-	public void Deposit(User user, int amount) {
-		user.addBalance(amount);
+	public static void Deposit(User user, String amount)throws Exception {
+		for (char a : amount.toCharArray())
+		{
+			if (Character.isDigit(a) == false)
+				throw new Exception("Invalid Amount");
+		}
+		int validAmount = Integer.parseInt(amount);
+		user.addBalance(validAmount);
+		FileManager.Update(user);
 	}
 }

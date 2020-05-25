@@ -1,63 +1,28 @@
 package model;
 
-import java.util.*;
 public class GameManager {
-	public static void main1(String[] args) 
-	{
-		Scanner s = new Scanner(System.in);
-		GameManager game1 = new GameManager();
-		game1.startTurn(100);
-		while (true)
-		{
-			System.out.println("player: " + game1.player.showHand() + game1.player.handValue());
-			System.out.println("dealer: " + game1.dealer.showHand() + game1.dealer.handValue());
-			int kelet = s.nextInt();
-			if (kelet == 1)
-			{
-				game1.playerHit();
-			}
-			if (kelet == 2)
-			{
-				game1.playerHold();
-				break;
-			}
-			if (kelet == 3)
-			{
-				game1.playerDouble();
-				break;
-			}
-			if (kelet == 4)
-			{
-				game1.playerSurrender();
-				break;
-			}
-			if (game1.player.handValue() > 21)
-				break;
-		}
-		System.out.println("player: " + game1.player.showHand() + game1.player.handValue());
-		System.out.println("dealer: " + game1.dealer.showHand() + game1.dealer.handValue());
-		System.out.println(game1.endTurn());
-	}
-	private Deck gameDeck = new Deck();
+	private static Deck gameDeck = new Deck();
 	private Dealer dealer = new Dealer();
 	private Player player = new Player();
-	private int bet;
-	public void startTurn(int betAmount)
+	private int betAmount;
+	public GameManager(int betAmount)
 	{
-		dealer.pushCard(gameDeck.pull());
-		dealer.pushCard(gameDeck.pull());
-		player.pushCard(gameDeck.pull());
-		player.pushCard(gameDeck.pull());
-		if (player.handValue() == 21)
-		{
-			System.out.println("BLACKJACK");
-		}
-		bet = betAmount;
+		this.betAmount = betAmount;
 	}
-	public int playerHit()
+	public int getBetAmount()
+	{
+		return betAmount;
+	}
+	public void startTurn()
+	{
+		dealer.pushCard(gameDeck.pull());
+		dealer.pushCard(gameDeck.pull());
+		player.pushCard(gameDeck.pull());
+		player.pushCard(gameDeck.pull());
+	}
+	public void playerHit()
 	{
 		player.pushCard(gameDeck.pull());
-		return player.handValue();
 	}
 	public void playerHold()
 	{
@@ -66,12 +31,7 @@ public class GameManager {
 	public void playerDouble()
 	{
 		player.pushCard(gameDeck.pull());
-		bet = bet * 2;
 		pushUntil17();
-	}
-	public void playerSurrender()
-	{
-		bet /= 2;
 	}
 	private void pushUntil17()
 	{
@@ -80,35 +40,66 @@ public class GameManager {
 			dealer.pushCard(gameDeck.pull());
 		}
 	}
-	public void Split()
+	public void playerSplit() throws Exception
 	{
+		if(player.handSize() != 2)
+			throw new Exception ("Player Hand Size Is Not 2");
+		if(player.getCard(0).getNumber() != player.getCard(1).getNumber())
+			throw new Exception ("Player Cards Not Same");
 		player.secondHandPushCard(player.getCard());
 		player.pushCard(gameDeck.pull());
 		player.secondHandPushCard(gameDeck.pull());
 	}
 	public String endTurn()
 	{
-		int playerHand1 = player.handValue();
-		int playerHand2 = player.secondHandValue();
-		int dealerHand = dealer.handValue();
 		String result = "";
-		result += "Hand1 : " + checkHandResult(playerHand1,dealerHand);
-		if (playerHand2 != 0)
+		String Hand1 = checkHandResult(player.handValue(),dealer.handValue());
+		result += "Hand 1: " + Hand1 + handResult(Hand1);
+		if (player.secondHandValue() != 0)
 		{
-			result += "Hand2 : " + checkHandResult(playerHand2,dealerHand);
+			String Hand2 = checkHandResult(player.secondHandValue(),dealer.handValue());
+			result += "Hand 2: " + Hand2 + handResult(Hand2);
 		}
 		return result;
 	}
-	private String checkHandResult(int playerHand,int dealerHand)
+	public String checkHandResult(int playerHand ,int dealerHand)
 	{
 		if (playerHand > 21)
-			return "LOSE";
+			return "LOSE ";
 		if (dealerHand > 21)
-			return "Win";
+			return "Win ";
 		if (playerHand > dealerHand)
-			return "Win";
+			return "Win ";
 		if (playerHand < dealerHand)
-			return "LOSE"; 
-		return "Tie";
+			return "LOSE "; 
+		return "Tie ";
+	}
+	public int calcMoney()
+	{
+		int sum = 0;
+		String result = checkHandResult(player.handValue(),dealer.handValue());
+		sum += handResult(result);
+		if (player.secondHandValue() != 0)
+		{
+			result = checkHandResult(player.secondHandValue(),dealer.handValue());
+			sum += handResult(result);
+		}
+		return sum;
+	}
+	private int handResult(String result)
+	{
+		if (result.equals("Win "))
+			return betAmount * 2;
+	    if (result.equals("LOSE "))
+	    	return 0;
+	    return betAmount;
+	}
+	@Override
+	public String toString() {
+	return "player: " + player.showHand() + player.handValue() + "\n" + "dealer: " + dealer.showHand() + dealer.handValue();
+	}
+	public int playerHandValue()
+	{
+		return player.handValue();
 	}
 }

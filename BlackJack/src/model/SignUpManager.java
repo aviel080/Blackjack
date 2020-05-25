@@ -13,8 +13,7 @@ public class SignUpManager {
 		userNameAvailable(userName);
 		User newUser = new User(userName,password);
 		users.add(newUser);
-		FileManager.write(users);
-		//Write to file;	
+		FileManager.write(users);	
 	}	
 	private void userNameValidation(String userName)throws Exception
 	{
