@@ -23,9 +23,12 @@ public class GameManager {
 		player.pushCard(gameDeck.pull());
 		player.pushCard(gameDeck.pull());
 	}
-	public void playerHit()
+	public void playerHit(int hand)
 	{
-		player.pushCard(gameDeck.pull());
+		if(hand == 1)
+			player.pushCard(gameDeck.pull());
+		else
+			player.secondHandPushCard(gameDeck.pull());
 	}
 	public void playerHold()
 	{
@@ -51,24 +54,42 @@ public class GameManager {
 			throw new Exception ("Player Hand Size Is Not 2");
 		if(player.getCard(0).getNumber() != player.getCard(1).getNumber())
 			throw new Exception ("Player Cards Not Same");
-		player.secondHandPushCard(player.getCard());
+		player.secondHandPushCard(player.removeCard());
 		player.pushCard(gameDeck.pull());
 		player.secondHandPushCard(gameDeck.pull());
 	}
 	public String endTurn()
 	{
 		String result = "";
-		String Hand1 = checkHandResult(player.handValue(),dealer.handValue());
-		result += "Hand 1: " + Hand1 + handResult(Hand1);
-		if (player.secondHandValue() != 0)
+		String Hand1 = handStatus(1);
+		result += "Hand 1: " + Hand1 + ",Gain: " + handResult(Hand1) + "\n";
+		if (isSplit())
 		{
-			String Hand2 = checkHandResult(player.secondHandValue(),dealer.handValue());
-			result += "Hand 2: " + Hand2 + handResult(Hand2);
+			String Hand2 = handStatus(2);
+			result += "Hand 2: " + Hand2 + ",Gain: " + handResult(Hand2);
 		}
 		return result;
 	}
-	public String checkHandResult(int playerHand ,int dealerHand)
+	public String handStatus(int hand)
 	{
+		if (hand == 1)
+			return checkHandResult(1);
+		else
+			return checkHandResult(2);
+	}
+	public String checkHandResult(int hand)
+	{
+		int playerHand = hand == 1 ? player.handValue() : player.secondHandValue();
+		int dealerHand = dealer.handValue();
+		if (playerHand == 21 && player.handSize() == 2)
+		{
+			if (dealerHand == 21 && dealer.handSize() == 2)
+				return "Tie ";
+			else
+				return "BLACK JACK ";
+		}
+		if (dealerHand == 21 && dealer.handSize() == 2)
+			return "LOSE ";
 		if (playerHand > 21)
 			return "LOSE ";
 		if (dealerHand > 21)
@@ -82,17 +103,19 @@ public class GameManager {
 	public int calcMoney()
 	{
 		int sum = 0;
-		String result = checkHandResult(player.handValue(),dealer.handValue());
+		String result = checkHandResult(1);
 		sum += handResult(result);
-		if (player.secondHandValue() != 0)
+		if (isSplit())
 		{
-			result = checkHandResult(player.secondHandValue(),dealer.handValue());
+			result = checkHandResult(2);
 			sum += handResult(result);
 		}
 		return sum;
 	}
 	private int handResult(String result)
 	{
+		if (result.equals("BLACK JACK "))
+			return (int)(betAmount * 2.5);
 		if (result.equals("Win "))
 			return betAmount * 2;
 	    if (result.equals("LOSE "))
@@ -101,10 +124,27 @@ public class GameManager {
 	}
 	@Override
 	public String toString() {
-	return "player: " + player.showHand() + player.handValue() + "\n" + "dealer: " + dealer.showHand() + dealer.handValue();
+	String result = "player Hand1: " + player.showHand() + player.handValue() + "\n";
+	if (isSplit())
+		result += "player Hand2: " + player.showSecondHand() + player.secondHandValue() + "\n";
+	result += "dealer: " + dealer.showHand() + dealer.handValue();
+	return result;
 	}
 	public int playerHandValue()
 	{
 		return player.handValue();
 	}
+	public int playerSecondHandValue()
+	{
+		return player.secondHandValue();
+	}
+	public boolean isSplit()
+	{
+		return player.secondHandValue() != 0;
+	}
+	public boolean BlackJack()
+	{
+		return player.handValue() == 21;
+	}
+	
 }

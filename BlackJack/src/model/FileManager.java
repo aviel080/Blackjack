@@ -27,8 +27,8 @@ public class FileManager {
 	public static void Update(User user) throws Exception
 	{
 		Set<User> users = read();
-		users.remove(user);
-		users.add(user);
+		users.remove(user);//old
+		users.add(user);//new
 		write(users);
 	}
 }

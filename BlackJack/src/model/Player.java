@@ -15,4 +15,8 @@ public class Player extends Dealer{
 	{
 		return secondHand.getHandValue();
 	}
+	public String showSecondHand()
+	{
+		return secondHand.returnHand();
+	}
 }

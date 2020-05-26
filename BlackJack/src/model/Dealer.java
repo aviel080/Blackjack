@@ -14,7 +14,7 @@ public class Dealer {
 	{
 		return hand.getHandValue();
 	}
-	public Card getCard()
+	public Card removeCard()
 	{
 		return hand.removeCard();
 	}

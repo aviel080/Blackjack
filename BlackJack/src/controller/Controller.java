@@ -9,11 +9,11 @@ import view.*;
 public class Controller {
 	private static User user;
 	private static GameManager game;
+	private static int hand = 1;
 	public static void main(String[] args)
 	{
 		GameView.mainScreen();
 	}
-	//lol
 	@SuppressWarnings("unused")
 	public static void Check()
 	{
@@ -41,23 +41,66 @@ public class Controller {
 		}
 		int bet = Integer.parseInt(betAmount);
 		game = new GameManager(bet);
+		hand = 1;
 		game.startTurn();
-		GameView.playScreen(game, user);
-	}
-	public static void hitController()
-	{
-		game.playerHit();
-		if (game.playerHandValue() > 21)
+		if (game.BlackJack())
 		{
+			game.playerHold();
 			endController();
 		}
 		else
 			GameView.playScreen(game, user);
 	}
-	public static void holdController()
+	public static void hitController(int hand)
 	{
-		game.playerHold();
-		endController();
+		if (game.isSplit() == false)
+		{
+			game.playerHit(hand);
+			if (game.playerHandValue() > 21)
+			{
+				endController();
+			}
+			else
+				GameView.playScreen(game, user);
+		}
+		else
+		{
+			game.playerHit(hand);
+			if (game.playerHandValue() > 21)
+			{
+				hand = 2;
+			}
+			else if(hand == 2)
+			{
+				if(game.playerSecondHandValue() > 21)
+				{
+					endController();
+					return;
+				}
+			}
+			GameView.splitScreen(game, user,hand);
+		}
+	}
+	public static void holdController(int hand)
+	{
+		if (game.isSplit() == false)
+		{
+			game.playerHold();
+			endController();
+		}
+		else
+		{
+			if (hand == 1)
+			{
+				hand = 2;
+				GameView.splitScreen(game, user,hand);
+			}
+			else if(hand == 2)
+			{
+				game.playerHold();
+				endController();
+			}
+		}
 	}
 	public static void doubleController()
 	{
@@ -76,13 +119,16 @@ public class Controller {
 	public static void splitController()
 	{
 		try{
+			ChargeManager.Withdraw(user,String.valueOf(game.getBetAmount()));
 			game.playerSplit();
 		}catch (Exception e){
 			System.out.println(e.toString());
 			GameView.playScreen(game, user);
 			return;
 		}
-		
+		System.out.println("Succsefull Split Bet Amount Per Hand: " + game.getBetAmount());
+		hand = 1;
+		GameView.splitScreen(game, user,hand);	
 	}
 	public static void surrenderController()
 	{
@@ -102,6 +148,9 @@ public class Controller {
 			} catch(Exception e){	
 				System.out.println(e.toString());
 			}
+		user.updateStatistics(game.handStatus(1));
+		if(game.isSplit())
+			user.updateStatistics(game.handStatus(2));
 		GameView.secondScreen(user);
 	}
 	public static void loginController()
@@ -155,9 +204,10 @@ public class Controller {
 		}
 		GameView.secondScreen(user);
 	}
-	public void statisticsController()
+	public static void statisticsController()
 	{
-		
+		GameView.statisticsScreen(user);
+		GameView.secondScreen(user);
 	}
 	
 }

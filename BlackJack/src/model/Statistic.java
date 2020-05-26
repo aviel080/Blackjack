@@ -4,37 +4,37 @@ import java.io.Serializable;
 
 public class Statistic implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int gamesWin;
-	private int gamesLose;
-	private int gamesTie;
-	private int moneyBalance;
 	
-	public void updateStatistic(char gameStatus)
+	private int handsPlayed=0;
+	private int handsBlackjack = 0;
+	private int handsWin =0;
+	private int handsLose=0;
+	private int handsTie=0;	
+	public void updateStatistic(String handstatus)
 	{
-		if (gameStatus == 'W')
-			gamesWin++;
-		if (gameStatus == 'L')
-			gamesLose++;
-		if (gameStatus == 'T')
-			gamesTie++;
+		handsPlayed++;
+		if (handstatus.equals("BLACK JACK "))
+			handsBlackjack++;
+		if (handstatus.equals("Win "))
+			handsWin++;
+		if (handstatus.equals("LOSE "))
+			handsLose++;
+		if (handstatus.equals("Tie "))
+			handsTie++;
 	}
-
-	public int getGamesWin() {
-		return gamesWin;
+	public int gethandsWin() {
+		return handsWin;
 	}
-	public int getgamesLose() {
-		return gamesLose;
+	public int gethandsLose() {
+		return handsLose;
 	}
-	public int getgamesTie() {
-		return gamesTie;
+	public int gethandsTie() {
+		return handsTie;
 	}
-
-	public int getMoneyBalance() {
-		return moneyBalance;
+	public int gethandsPlayed() {
+		return handsPlayed;
 	}
-
-	public void updateMoneyBalance(int amount) {
-		moneyBalance += amount;
+	public int getHandsBlackjack() {
+		return handsBlackjack;
 	}
-
 }
