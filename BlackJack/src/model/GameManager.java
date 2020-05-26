@@ -141,10 +141,5 @@ public class GameManager {
 	public boolean isSplit()
 	{
 		return player.secondHandValue() != 0;
-	}
-	public boolean BlackJack()
-	{
-		return player.handValue() == 21;
-	}
-	
+	}	
 }

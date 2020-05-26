@@ -41,15 +41,19 @@ public class User implements Serializable  {
 	public String getStatistics()
 	{
 		String result = "";
-		result += "Hands Played: " + statistics.gethandsPlayed()+ "\n";
-		result += "Hands BlackJack: " + statistics.getHandsBlackjack()+ "\n";
-		result += "Hands Win: " + statistics.gethandsWin()+ "\n";
-		result += "Hands Lose: " + statistics.gethandsLose()+ "\n";
-		result += "Hands Tie: " + statistics.gethandsTie();
+		result += "Hands Played: " + statistics.gethandsPlayed() + "\n";
+		result += statistics.getHandsBlackjack();
+		result += statistics.gethandsWin();
+		result += statistics.gethandsLose();
+		result += statistics.gethandsTie();
 		return result;
 	}
 	public void updateStatistics(String handStatus)
 	{
 		statistics.updateStatistic(handStatus);
+	}
+	public void clearStatistics()
+	{
+		statistics = new Statistic();
 	}
 }

@@ -24,11 +24,16 @@ public class FileManager {
 			return (Set<User>) objectInputStream.readObject();
 		}
 	}
-	public static void Update(User user) throws Exception
+	public static void Update(User user)
 	{
+		try{
 		Set<User> users = read();
 		users.remove(user);//old
 		users.add(user);//new
 		write(users);
+		}catch(Exception e){
+			e.printStackTrace();
+			System.exit(0);
+		}
 	}
 }

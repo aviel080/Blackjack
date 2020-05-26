@@ -151,13 +151,14 @@ public class GameView {
 		System.out.println("Enter Amount To Withdraw: ");
 		return s.nextLine();
 	}
-	public static void statisticsScreen(User user)
+	public static String statisticsScreen(User user)
 	{
 		System.out.println("~Statistics~");
 		System.out.println("Hello " + user +",");
 		System.out.println("Money Amount: " + user.getBalance());
-		System.out.println(user.getStatistics());
-		System.out.println("Press Any Key To Back");
-		s.nextLine();
+		System.out.print(user.getStatistics());
+		System.out.println("To Clear Statistics - clear");
+		System.out.println("Back - Any");
+		return s.nextLine();
 	}
 }

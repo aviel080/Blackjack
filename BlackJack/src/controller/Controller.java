@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,7 +11,7 @@ public class Controller {
 	private static User user;
 	private static GameManager game;
 	private static int hand = 1;
-	public static void main(String[] args)
+	public static void main(String[] args) 
 	{
 		GameView.mainScreen();
 	}
@@ -26,6 +27,7 @@ public class Controller {
 		 for (User a : users)
 		 {
 			 System.out.println(a + " " + a.getBalance());
+			 System.out.println(a.getStatistics());
 		 }
 	}
 	public static void playController()
@@ -43,13 +45,7 @@ public class Controller {
 		game = new GameManager(bet);
 		hand = 1;
 		game.startTurn();
-		if (game.BlackJack())
-		{
-			game.playerHold();
-			endController();
-		}
-		else
-			GameView.playScreen(game, user);
+		GameView.playScreen(game, user);
 	}
 	public static void hitController(int hand)
 	{
@@ -151,6 +147,7 @@ public class Controller {
 		user.updateStatistics(game.handStatus(1));
 		if(game.isSplit())
 			user.updateStatistics(game.handStatus(2));
+		FileManager.Update(user);
 		GameView.secondScreen(user);
 	}
 	public static void loginController()
@@ -206,7 +203,13 @@ public class Controller {
 	}
 	public static void statisticsController()
 	{
-		GameView.statisticsScreen(user);
+		if(GameView.statisticsScreen(user).equals("clear"))
+		{
+			user.clearStatistics();
+			FileManager.Update(user);
+			statisticsController();
+			return;
+		}
 		GameView.secondScreen(user);
 	}
 	

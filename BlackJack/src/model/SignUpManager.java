@@ -34,8 +34,10 @@ public class SignUpManager {
 	private void userNameAvailable(String userName)throws Exception
 	{
 		users = FileManager.read();
-		User checkUser = new User(userName, "");
-		if (users.contains(checkUser))
-			throw new Exception("Username Already In Use");		
+		for (User a : users)
+		{
+			if (a.toString().toUpperCase().equals(userName.toUpperCase()))
+				throw new Exception("Username Already Exists");
+		}
 	}
 }
