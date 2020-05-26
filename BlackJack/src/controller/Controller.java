@@ -13,6 +13,7 @@ public class Controller {
 	{
 		GameView.mainScreen();
 	}
+	//lol
 	@SuppressWarnings("unused")
 	public static void Check()
 	{
