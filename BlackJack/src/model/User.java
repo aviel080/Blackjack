@@ -28,7 +28,6 @@ public class User implements Serializable  {
 	}
 	@Override
 	public int hashCode() {
-		// TODO Auto-generated method stub
 		return userName.hashCode();
 	}
 	public String getPassword() {

@@ -23,8 +23,6 @@ public class Deck {
 	{
 		for (int i=1;i<=13;i++)
 		{
-			if (i >= 2 && i<= 9)
-				continue;
 			deckCards.add(new Card(i,sign));
 		}
 	}

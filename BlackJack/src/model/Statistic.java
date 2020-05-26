@@ -47,7 +47,7 @@ public class Statistic implements Serializable {
 	}
 	private int calcPrecent (int num)
 	{
-		if (num == 0)
+		if (handsPlayed == 0)
 			return 0;
 		else
 			return (int)(((double) num /handsPlayed)* 100);
