@@ -12,33 +12,19 @@ public class Deck {
 	{
 		for (int j=0;j<4;j++)
 		{
-			for (int i=1;i<=13;i++)
-			{
-				deckCards.add(new Card(i,"CLUBS"));
-			}
-		}
-		for (int j=0;j<4;j++)
-		{
-			for (int i=1;i<=13;i++)
-			{
-				deckCards.add(new Card(i,"DIAMONDS"));
-			}
-		}
-		for (int j=0;j<4;j++)
-		{
-			for (int i=1;i<=13;i++)
-			{
-				deckCards.add(new Card(i,"HEARTS"));
-			}
-		}
-		for (int j=0;j<4;j++)
-		{
-			for (int i=1;i<=13;i++)
-			{
-				deckCards.add(new Card(i,"SPADES"));
-			}
+			addPerSign("CLUBS");
+			addPerSign("DIAMONDS");
+			addPerSign("HEARTS");
+			addPerSign("SPADES");
 		}
 		Collections.shuffle(deckCards);
+	}
+	private void addPerSign(String sign)
+	{
+		for (int i=1;i<=13;i++)
+		{
+			deckCards.add(new Card(i,sign));
+		}
 	}
 	public Card pull()
 	{

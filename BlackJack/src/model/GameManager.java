@@ -9,13 +9,16 @@ public class GameManager {
 	{
 		this.betAmount = betAmount;
 	}
+	public void setBetAmount(int betAmount)
+	{
+		this.betAmount = betAmount;
+	}
 	public int getBetAmount()
 	{
 		return betAmount;
 	}
 	public void startTurn()
 	{
-		dealer.pushCard(gameDeck.pull());
 		dealer.pushCard(gameDeck.pull());
 		player.pushCard(gameDeck.pull());
 		player.pushCard(gameDeck.pull());
@@ -28,8 +31,10 @@ public class GameManager {
 	{
 		pushUntil17();
 	}
-	public void playerDouble()
+	public void playerDouble() throws Exception
 	{
+		if(player.handSize() != 2)
+			throw new Exception ("Player Hand Size Is Not 2");
 		player.pushCard(gameDeck.pull());
 		pushUntil17();
 	}

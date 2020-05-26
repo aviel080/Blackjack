@@ -9,7 +9,7 @@ import view.*;
 public class Controller {
 	private static User user;
 	private static GameManager game;
-	public static void main(String[] args) 
+	public static void main(String[] args)
 	{
 		GameView.mainScreen();
 	}
@@ -60,7 +60,16 @@ public class Controller {
 	}
 	public static void doubleController()
 	{
-		game.playerDouble();
+		try {
+			ChargeManager.Withdraw(user,String.valueOf(game.getBetAmount()));
+			game.playerDouble();
+		} catch(Exception e){	
+			System.out.println(e.toString());
+			GameView.playScreen(game, user);
+			return;
+		}
+		game.setBetAmount(game.getBetAmount() * 2);
+		System.out.println("Succsefull New Bet Amount : " + game.getBetAmount());
 		endController();
 	}
 	public static void splitController()
