@@ -9,6 +9,7 @@ public class GameView {
 	private static Scanner s = new Scanner(System.in);
 	public static void mainScreen()
 	{
+		System.out.println("Welcome To BlackJack!");
 		System.out.println("1 - Login");
 		System.out.println("2 - Signup");
 		System.out.println("Other - Exit");

@@ -1,11 +1,13 @@
 package model;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashSet;
 import java.util.Set;
 
 public class FileManager {
@@ -19,7 +21,9 @@ public class FileManager {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static Set<User> read() throws FileNotFoundException, IOException, ClassNotFoundException {		
+	public static Set<User> read() throws FileNotFoundException, IOException, ClassNotFoundException {
+		if ((new File(filename)).exists() == false)
+			return new HashSet<User>();
 		try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filename))) {
 			return (Set<User>) objectInputStream.readObject();
 		}
