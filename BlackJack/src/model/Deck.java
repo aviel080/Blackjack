@@ -3,12 +3,19 @@ package model;
 import java.util.*;
 
 public class Deck {
+	private static Deck gameDeck= null;
 	private ArrayList<Card> deckCards = new ArrayList<Card>();
-	Deck()
+	private Deck()
 	{
-		buildDeck();
+		addCards();
 	}
-	private void buildDeck()
+	public static Deck buildDeck()
+	{
+		if (gameDeck == null)
+			gameDeck = new Deck();
+		return gameDeck;
+	}
+	private void addCards()
 	{
 		for (int j=0;j<4;j++)
 		{
@@ -30,7 +37,7 @@ public class Deck {
 	{
 		if (deckCards.size() == 0)
 		{
-			buildDeck();
+			addCards();
 		}
 		return deckCards.remove(0);
 	}

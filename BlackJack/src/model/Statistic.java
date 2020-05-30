@@ -5,19 +5,11 @@ import java.io.Serializable;
 public class Statistic implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private int handsPlayed;
-	private int handsBlackjack;
-	private int handsWin;
-	private int handsLose;
-	private int handsTie;	
-	public Statistic()
-	{
-		handsPlayed=0;
-		handsBlackjack = 0;
-		handsWin =0;
-		handsLose=0;
-		handsTie=0;	
-	}
+	private int handsPlayed = 0;
+	private int handsBlackjack = 0;
+	private int handsWin = 0;
+	private int handsLose = 0;
+	private int handsTie = 0;	
 	public void updateStatistic(String handstatus)
 	{
 		handsPlayed++;

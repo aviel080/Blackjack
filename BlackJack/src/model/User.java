@@ -6,14 +6,13 @@ public class User implements Serializable  {
 	private static final long serialVersionUID = 1L;
 	private String userName;
 	private String password;
-	private Statistic statistics;
+	private Statistic statistics = new Statistic();
 	private int balance=0;
 	
 	public User(String userName,String password)
 	{
 		this.userName = userName;
 		this.password = password;
-		this.statistics = new Statistic();
 	}
 	public int getBalance() {
 		return balance;
@@ -32,6 +31,9 @@ public class User implements Serializable  {
 	}
 	public String getPassword() {
 		return password;
+	}
+	public String getUserName() {
+		return userName;
 	}
 	@Override
 	public String toString() {

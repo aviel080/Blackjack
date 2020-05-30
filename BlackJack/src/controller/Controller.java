@@ -154,9 +154,8 @@ public class Controller {
 		StringBuilder username = new StringBuilder();
 		StringBuilder password = new StringBuilder();
 		GameView.loginScreen(username,password);
-		LoginManager sum = new LoginManager();
 		try {
-			user = sum.userLogin(username.toString(),password.toString());
+			user = LoginManager.userLogin(username.toString(),password.toString());
 			System.out.println("Login Succsefully");
 			GameView.secondScreen(user);
 		}catch(Exception e){
@@ -169,9 +168,8 @@ public class Controller {
 		StringBuilder username = new StringBuilder();
 		StringBuilder password = new StringBuilder();
 		GameView.signUpScreen(username,password);
-		SignUpManager sum = new SignUpManager();
 		try {
-			sum.signNewUser(username.toString(),password.toString());
+			SignUpManager.signNewUser(username.toString(),password.toString());
 			System.out.println("User Added Succsefully");
 		}catch(Exception e){	
 			System.out.println(e.toString());

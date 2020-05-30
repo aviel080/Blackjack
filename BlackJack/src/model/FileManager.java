@@ -37,7 +37,7 @@ public class FileManager {
 		write(users);
 		}catch(Exception e){
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(1);
 		}
 	}
 }

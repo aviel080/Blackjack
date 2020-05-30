@@ -1,7 +1,7 @@
 package model;
 
 public class GameManager {
-	private static Deck gameDeck = new Deck();
+	private Deck gameDeck = Deck.buildDeck();
 	private Dealer dealer = new Dealer();
 	private Player player = new Player();
 	private int betAmount;
