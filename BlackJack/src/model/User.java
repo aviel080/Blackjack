@@ -3,16 +3,14 @@ package model;
 import java.io.Serializable;
 
 public class User implements Serializable  {
+	
 	private static final long serialVersionUID = 1L;
 	private String userName;
 	private String password;
-	private Statistic statistics = new Statistic();
-	private int balance=0;
+	private Statistic statistics;
+	private int balance;
 	
-	public User(String userName,String password)
-	{
-		this.userName = userName;
-		this.password = password;
+	private User()	{		
 	}
 	public int getBalance() {
 		return balance;
@@ -37,7 +35,7 @@ public class User implements Serializable  {
 	}
 	@Override
 	public String toString() {
-		return userName;
+		return "Hello " + userName +",\n" + "Money Amount: " + balance;		 
 	}
 	public String getStatistics()
 	{
@@ -56,5 +54,37 @@ public class User implements Serializable  {
 	public void clearStatistics()
 	{
 		statistics = new Statistic();
+	}
+	public static class UserBuilder {
+		private String userName;
+		private String password;
+		private Statistic statistics = new Statistic();
+		private int balance = 0;
+				
+		public UserBuilder withUserName(String userName) {
+			this.userName = userName;
+			return this;
+		}
+		public UserBuilder withPassword(String password) {
+			this.password = password;
+			return this;
+		}
+		public UserBuilder withStatistics(Statistic statistics) {
+			this.statistics = statistics;
+			return this;
+		}
+		public UserBuilder withBalance(int balance) {
+			this.balance = balance;
+			return this;
+		}
+		public User build()
+		{
+			User user = new User();
+			user.userName = this.userName;
+			user.password = this.password;
+			user.statistics = this.statistics;
+			user.balance = this.balance;
+			return user;
+		}
 	}
 }

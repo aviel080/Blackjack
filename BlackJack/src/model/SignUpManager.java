@@ -1,6 +1,7 @@
 package model;
 
 import java.util.Set;
+import model.User.UserBuilder;
 
 public class SignUpManager {
 
@@ -9,7 +10,10 @@ public class SignUpManager {
 		userNameValidation(userName);
 		passwordValidation(password);
 		userNameAvailable(userName);
-		User newUser = new User(userName,password);
+		User newUser = new UserBuilder()
+				.withUserName(userName)
+				.withPassword(password)
+				.build();
 		FileManager.Update(newUser);
 	}	
 	private static void userNameValidation(String userName)throws Exception

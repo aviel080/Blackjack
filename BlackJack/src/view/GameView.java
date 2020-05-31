@@ -44,8 +44,7 @@ public class GameView {
 	}
 	public static void secondScreen(User user)
 	{
-		System.out.println("Hello " + user +",");
-		System.out.println("Money Amount: " + user.getBalance());
+		System.out.println(user);
 		System.out.println("1 - Play");
 		System.out.println("2 - Deposit Money");
 		System.out.println("3 - Withdraw Money");
@@ -73,8 +72,7 @@ public class GameView {
 	}
 	public static String betScreen(User user)
 	{
-		System.out.println("Hello " + user +",");
-		System.out.println("Money Amount: " + user.getBalance());
+		System.out.println(user);
 		System.out.println("Enter Bet Amount: ");
 		return s.nextLine();
 	}
@@ -138,24 +136,21 @@ public class GameView {
 	public static String depositScreen(User user)
 	{
 		System.out.println("~Deposit~");
-		System.out.println("Hello " + user +",");
-		System.out.println("Money Amount: " + user.getBalance());
+		System.out.println(user);
 		System.out.println("Enter Amount To Deposit: ");
 		return s.nextLine();
 	}
 	public static String withdrawScreen(User user)
 	{
 		System.out.println("~Withdraw~");
-		System.out.println("Hello " + user +",");
-		System.out.println("Money Amount: " + user.getBalance());
+		System.out.println(user);
 		System.out.println("Enter Amount To Withdraw: ");
 		return s.nextLine();
 	}
 	public static String statisticsScreen(User user)
 	{
 		System.out.println("~Statistics~");
-		System.out.println("Hello " + user +",");
-		System.out.println("Money Amount: " + user.getBalance());
+		System.out.println(user);
 		System.out.print(user.getStatistics());
 		System.out.println("To Clear Statistics - clear");
 		System.out.println("Back - Any");
