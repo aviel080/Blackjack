@@ -159,6 +159,6 @@ public class GameView {
 		System.out.print(user.getStatistics());
 		System.out.println("To Clear Statistics - clear");
 		System.out.println("Back - Any");
-		return s.nextLine();
+		return s.nextLine();//fs
 	}
 }
