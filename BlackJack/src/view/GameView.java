@@ -11,7 +11,7 @@ public class GameView {
 		System.out.println("Welcome To BlackJack!");
 		System.out.println("1 - Login");
 		System.out.println("2 - Signup");
-		System.out.println("Other - Exit");
+		System.out.println("Q - Quit");
 		String select = s.nextLine();
 		switch (select)
 		{
@@ -21,9 +21,13 @@ public class GameView {
 		case "2":
 			Controller.signupController();
 			break;
+		case "q":
+		case "Q":
+			System.out.println("Bye!");
+			System.exit(0);
 	    default:
-	    	s.close();
-	    	System.exit(0); 
+			System.out.println("Invalid Input Please Try Again!");
+	    	mainScreen(); 
 		}
 	}
 	public static void loginScreen(StringBuilder username,StringBuilder password)
@@ -42,14 +46,14 @@ public class GameView {
 		System.out.println("Enter Password: ");
 		password.append(s.nextLine());
 	}
-	public static void secondScreen(User user)
+	public static void inGameMenuScreen(User user)
 	{
 		System.out.println(user);
 		System.out.println("1 - Play");
 		System.out.println("2 - Deposit Money");
 		System.out.println("3 - Withdraw Money");
 		System.out.println("4 - Statistics");
-		System.out.println("Other - Exit");
+		System.out.println("5 - LogOut");
 		String select = s.nextLine();
 		switch (select)
 		{
@@ -65,9 +69,12 @@ public class GameView {
 		case "4":
 			Controller.statisticsController();
 			break;
+		case "5":
+			mainScreen();
+			break;
 	    default:
-	    	s.close();
-	    	System.exit(0); 
+			System.out.println("Invalid Input Please Try Again!");
+			inGameMenuScreen(user);
 		}
 	}
 	public static String betScreen(User user)
@@ -84,7 +91,6 @@ public class GameView {
 		System.out.println("3 - Double");
 		System.out.println("4 - Split");
 		System.out.println("5 - Surrender");
-		System.out.println("Other - Exit");
 		String select = s.nextLine();
 		switch (select)
 		{
@@ -104,8 +110,8 @@ public class GameView {
 			Controller.surrenderController();
 			break;
 	    default:
-	    	s.close();
-	    	System.exit(0); 
+	    	System.out.println("Invalid Input Please Try Again!");
+	    	playScreen(game, user);
 		}
 	}
 	public static void splitScreen(GameManager game, User user,int hand)
@@ -113,7 +119,6 @@ public class GameView {
 		System.out.println(game);
 		System.out.println("1 - Hit Hand " + hand);
 		System.out.println("2 - Hold Hand "+ hand);
-		System.out.println("Other - Exit");
 		String select = s.nextLine();
 		switch (select)
 		{
@@ -124,8 +129,8 @@ public class GameView {
 			Controller.holdController(hand);
 			break;
 	    default:
-	    	s.close();
-	    	System.exit(0); 
+	    	System.out.println("Invalid Input Please Try Again!");
+	    	splitScreen(game, user, hand);
 		}
 	}
 	public static void endScreen(String result, GameManager game)

@@ -3,6 +3,8 @@ package controller;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.xml.bind.ValidationException;
+
 import model.*;
 import view.*;
 
@@ -34,10 +36,10 @@ public class Controller {
 		String betAmount = GameView.betScreen(user);
 		try {
 		ChargeManager.Withdraw(user, betAmount);
-		System.out.println("Succsefull Bet Amount : " + betAmount);
+		System.out.println("Succsefull Bet Amount : " + betAmount); 
 		} catch(Exception e){	
 			System.out.println(e.toString());
-			GameView.betScreen(user);
+			playController();
 			return;
 		}
 		int bet = Integer.parseInt(betAmount);
@@ -133,7 +135,7 @@ public class Controller {
 			} catch(Exception e){	
 				System.out.println(e.toString());
 			}
-		GameView.secondScreen(user);
+		GameView.inGameMenuScreen(user);
 	}
 	private static void endController()
 	{
@@ -147,7 +149,7 @@ public class Controller {
 		if(game.isSplit())
 			user.updateStatistics(game.handStatus(2));
 		FileManager.Update(user);
-		GameView.secondScreen(user);
+		GameView.inGameMenuScreen(user);
 	}
 	public static void loginController()
 	{
@@ -157,7 +159,7 @@ public class Controller {
 		try {
 			user = LoginManager.userLogin(username.toString(),password.toString());
 			System.out.println("Login Succsefully");
-			GameView.secondScreen(user);
+			GameView.inGameMenuScreen(user);
 		}catch(Exception e){
 			System.out.println(e.toString());
 			GameView.mainScreen();
@@ -182,10 +184,12 @@ public class Controller {
 		try {
 		ChargeManager.Deposit(user, amount);
 		System.out.println("Succsefully Added " + amount);
-		} catch(Exception e){	
-			System.out.println(e.toString());
+		GameView.inGameMenuScreen(user);
 		}
-		GameView.secondScreen(user);
+		catch(Exception e){	
+			System.out.println(e.toString());
+			depositController();
+		}
 	}
 	public static void withdrawController()
 	{
@@ -193,10 +197,12 @@ public class Controller {
 		try {
 		ChargeManager.Withdraw(user, amount);
 		System.out.println("Succsefully Taken " + amount);
-		} catch(Exception e){	
-			System.out.println(e.toString());
+		GameView.inGameMenuScreen(user);
 		}
-		GameView.secondScreen(user);
+		catch(Exception e){	
+			System.out.println(e.toString());
+			withdrawController();
+		}
 	}
 	public static void statisticsController()
 	{
@@ -207,7 +213,7 @@ public class Controller {
 			statisticsController();
 			return;
 		}
-		GameView.secondScreen(user);
+		GameView.inGameMenuScreen(user);
 	}
 	
 }
