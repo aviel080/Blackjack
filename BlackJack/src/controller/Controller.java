@@ -1,22 +1,120 @@
 package controller;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.xml.bind.ValidationException;
-
 import model.*;
-import view.*;
 
 public class Controller {
-	private static User user;
-	private static GameManager game;
-	private static int hand = 1;
-	public static void main(String[] args) 
+	private static Controller controller = null;
+	private LoginManager loginManager= new LoginManager();
+	private SignUpManager signUpManager= new SignUpManager();
+	private ChargeManager chargeManager = new ChargeManager();
+	private User user;
+	private GameManager game;
+	public static Controller BuildController()
 	{
-		GameView.mainScreen();
+		if (controller == null)
+			controller = new Controller();
+		return controller;
 	}
-	@SuppressWarnings("unused")
+	public User loginController(String username,String password)throws Exception
+	{
+		user = loginManager.userLogin(username, password);
+		return user;
+	}
+	public void signupController(String username,String password)throws Exception
+	{
+		signUpManager.signNewUser(username,password);
+	}
+	public GameManager playController(String betAmount) throws Exception
+	{
+		chargeManager.Withdraw(user, betAmount);		
+		int bet = Integer.parseInt(betAmount);
+		game = new GameManager(bet);
+		game.startTurn();
+		return game;
+	}
+	public boolean hitController()
+	{
+		return game.playerHit();
+	}
+	public void endController()
+	{
+		chargeManager.Deposit(user, game.calcMoney());
+		user.updateStatistics(game.checkHandResult(1));
+		if(game.isSplit())
+			user.updateStatistics(game.checkHandResult(2));
+		FileManager.Update(user);
+	}
+	public boolean holdController()
+	{
+		return game.playerHold(); 
+	}
+	public boolean splitController()
+	{
+		try{
+			if(user.getBalance() < game.getBetAmount(1))
+				throw new Exception("Not Enough Money");
+			game.playerSplit();
+		}catch (Exception e){
+			System.out.println(e.toString());
+			return false;
+		}
+		chargeManager.Withdraw(user,game.getBetAmount(1));
+		game.setBetAmount(game.getBetAmount(1) , 2);
+		return true;
+	}
+	public boolean doubleController()
+	{
+		boolean status;
+		int hand = game.getPlayerHand();
+		try {
+			if(user.getBalance() < game.getBetAmount(hand))
+				throw new Exception("Not Enough Money");
+			status = game.playerDouble();
+		} catch(Exception e){	
+			System.out.println(e.toString());
+			return true;
+		}
+		chargeManager.Withdraw(user, game.getBetAmount(hand));
+		game.setBetAmount(game.getBetAmount(hand) * 2, hand);
+		return status;
+	}
+	public boolean surrenderController()
+	{
+		return game.playerSurrender();
+	}
+	public boolean depositController(String amount)
+	{
+		try {
+		chargeManager.Deposit(user, amount);
+		}
+		catch(Exception e){	
+			System.out.println(e.toString());
+			return false;
+		}
+		return true;
+	}
+	public boolean withdrawController(String amount)
+	{
+		try {
+		chargeManager.Withdraw(user, amount);
+		}
+		catch(Exception e){	
+			System.out.println(e.toString());
+			return false;
+		}
+		return true;
+	}
+	public boolean statisticsController(String choose)
+	{
+		if(choose.equals("clear"))
+		{
+			user.clearStatistics();
+			FileManager.Update(user);
+			return true;
+		}
+		return false;
+	}
+	/*
 	public static void Check()
 	{
 		 Set<User> users = new HashSet<User>();
@@ -31,189 +129,5 @@ public class Controller {
 			 System.out.println(a.getStatistics());
 		 }
 	}
-	public static void playController()
-	{
-		String betAmount = GameView.betScreen(user);
-		try {
-		ChargeManager.Withdraw(user, betAmount);
-		System.out.println("Succsefull Bet Amount : " + betAmount); 
-		} catch(Exception e){	
-			System.out.println(e.toString());
-			playController();
-			return;
-		}
-		int bet = Integer.parseInt(betAmount);
-		game = new GameManager(bet);
-		hand = 1;
-		game.startTurn();
-		GameView.playScreen(game, user);
-	}
-	public static void hitController(int hand)
-	{
-		if (game.isSplit() == false)
-		{
-			game.playerHit(hand);
-			if (game.playerHandValue() > 21)
-			{
-				endController();
-			}
-			else
-				GameView.playScreen(game, user);
-		}
-		else
-		{
-			game.playerHit(hand);
-			if (game.playerHandValue() > 21)
-			{
-				hand = 2;
-			}
-			else if(hand == 2)
-			{
-				if(game.playerSecondHandValue() > 21)
-				{
-					endController();
-					return;
-				}
-			}
-			GameView.splitScreen(game, user,hand);
-		}
-	}
-	public static void holdController(int hand)
-	{
-		if (game.isSplit() == false)
-		{
-			game.playerHold();
-			endController();
-		}
-		else
-		{
-			if (hand == 1)
-			{
-				hand = 2;
-				GameView.splitScreen(game, user,hand);
-			}
-			else if(hand == 2)
-			{
-				game.playerHold();
-				endController();
-			}
-		}
-	}
-	public static void doubleController()
-	{
-		try {
-			ChargeManager.Withdraw(user,String.valueOf(game.getBetAmount()));
-			game.playerDouble();
-		} catch(Exception e){	
-			System.out.println(e.toString());
-			GameView.playScreen(game, user);
-			return;
-		}
-		game.setBetAmount(game.getBetAmount() * 2);
-		System.out.println("Succsefull New Bet Amount : " + game.getBetAmount());
-		endController();
-	}
-	public static void splitController()
-	{
-		try{
-			ChargeManager.Withdraw(user,String.valueOf(game.getBetAmount()));
-			game.playerSplit();
-		}catch (Exception e){
-			System.out.println(e.toString());
-			GameView.playScreen(game, user);
-			return;
-		}
-		System.out.println("Succsefull Split Bet Amount Per Hand: " + game.getBetAmount());
-		hand = 1;
-		GameView.splitScreen(game, user,hand);	
-	}
-	public static void surrenderController()
-	{
-		GameView.endScreen("Surrender", game);
-		try {
-			ChargeManager.Deposit(user, String.valueOf(game.getBetAmount() / 2));
-			} catch(Exception e){	
-				System.out.println(e.toString());
-			}
-		GameView.inGameMenuScreen(user);
-	}
-	private static void endController()
-	{
-		GameView.endScreen(game.endTurn(), game);
-		try {
-			ChargeManager.Deposit(user, String.valueOf(game.calcMoney()));
-			} catch(Exception e){	
-				System.out.println(e.toString());
-			}
-		user.updateStatistics(game.handStatus(1));
-		if(game.isSplit())
-			user.updateStatistics(game.handStatus(2));
-		FileManager.Update(user);
-		GameView.inGameMenuScreen(user);
-	}
-	public static void loginController()
-	{
-		StringBuilder username = new StringBuilder();
-		StringBuilder password = new StringBuilder();
-		GameView.loginScreen(username,password);
-		try {
-			user = LoginManager.userLogin(username.toString(),password.toString());
-			System.out.println("Login Succsefully");
-			GameView.inGameMenuScreen(user);
-		}catch(Exception e){
-			System.out.println(e.toString());
-			GameView.mainScreen();
-		}
-	}
-	public static void signupController()
-	{
-		StringBuilder username = new StringBuilder();
-		StringBuilder password = new StringBuilder();
-		GameView.signUpScreen(username,password);
-		try {
-			SignUpManager.signNewUser(username.toString(),password.toString());
-			System.out.println("User Added Succsefully");
-		}catch(Exception e){	
-			System.out.println(e.toString());
-		}
-		GameView.mainScreen();
-	}
-	public static void depositController()
-	{
-		String amount = GameView.depositScreen(user);
-		try {
-		ChargeManager.Deposit(user, amount);
-		System.out.println("Succsefully Added " + amount);
-		GameView.inGameMenuScreen(user);
-		}
-		catch(Exception e){	
-			System.out.println(e.toString());
-			depositController();
-		}
-	}
-	public static void withdrawController()
-	{
-		String amount = GameView.withdrawScreen(user);
-		try {
-		ChargeManager.Withdraw(user, amount);
-		System.out.println("Succsefully Taken " + amount);
-		GameView.inGameMenuScreen(user);
-		}
-		catch(Exception e){	
-			System.out.println(e.toString());
-			withdrawController();
-		}
-	}
-	public static void statisticsController()
-	{
-		if(GameView.statisticsScreen(user).equals("clear"))
-		{
-			user.clearStatistics();
-			FileManager.Update(user);
-			statisticsController();
-			return;
-		}
-		GameView.inGameMenuScreen(user);
-	}
-	
+	*/
 }

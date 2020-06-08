@@ -42,9 +42,10 @@ public class User implements Serializable  {
 		String result = "";
 		result += "Hands Played: " + statistics.gethandsPlayed() + "\n";
 		result += statistics.getHandsBlackjack();
-		result += statistics.gethandsWin();
-		result += statistics.gethandsLose();
-		result += statistics.gethandsTie();
+		result += statistics.getHandsWin();
+		result += statistics.getHandsLose();
+		result += statistics.getHandsTie();
+		result += statistics.getHandsSurrender();
 		return result;
 	}
 	public void updateStatistics(String handStatus)

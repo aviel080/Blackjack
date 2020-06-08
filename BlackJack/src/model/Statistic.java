@@ -10,6 +10,7 @@ public class Statistic implements Serializable {
 	private int handsWin = 0;
 	private int handsLose = 0;
 	private int handsTie = 0;	
+	private int handsSurrender = 0;
 	public void updateStatistic(String handstatus)
 	{
 		handsPlayed++;
@@ -21,6 +22,8 @@ public class Statistic implements Serializable {
 			handsLose++;
 		if (handstatus.equals("Tie "))
 			handsTie++;
+		if (handstatus.equals("Surrender "))
+			handsSurrender++;
 	}
 	public int gethandsPlayed() {
 		return handsPlayed;
@@ -28,14 +31,17 @@ public class Statistic implements Serializable {
 	public String getHandsBlackjack() {
 		return "Hands BlackJack: "+ handsBlackjack + " (" + calcPrecent(handsBlackjack) + "%)\n";
 	}
-	public String gethandsWin() {
+	public String getHandsWin() {
 		return "Hands Win: "+ handsWin + " (" + calcPrecent(handsWin) + "%)\n";
 	}
-	public String gethandsLose() {
+	public String getHandsLose() {
 		return "Hands Lose: "+ handsLose + " (" + calcPrecent(handsLose) + "%)\n";
 	}
-	public String gethandsTie() {
+	public String getHandsTie() {
 		return "Hands Tie: "+ handsTie + " (" + calcPrecent(handsTie) + "%)\n";
+	}
+	public String getHandsSurrender() {
+		return "Hands Surrender: "+ handsSurrender + " (" + calcPrecent(handsSurrender) + "%)\n";
 	}
 	private int calcPrecent (int num)
 	{

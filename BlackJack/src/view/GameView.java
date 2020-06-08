@@ -6,7 +6,15 @@ import model.*;
 
 public class GameView {
 	private static Scanner s = new Scanner(System.in);
-	public static void mainScreen()
+	private Controller controller = Controller.BuildController();
+	private User user;
+	private GameManager game;
+	public static void main(String[] args) 
+	{
+		GameView gameView = new GameView();
+		gameView.mainScreen();
+	}
+	public void mainScreen()
 	{
 		System.out.println("Welcome To BlackJack!");
 		System.out.println("1 - Login");
@@ -16,10 +24,10 @@ public class GameView {
 		switch (select)
 		{
 		case "1":
-			Controller.loginController();
+			loginScreen();
 			break;
 		case "2":
-			Controller.signupController();
+			signUpScreen();
 			break;
 		case "q":
 		case "Q":
@@ -30,23 +38,38 @@ public class GameView {
 	    	mainScreen(); 
 		}
 	}
-	public static void loginScreen(StringBuilder username,StringBuilder password)
+	public void loginScreen()
 	{
 		System.out.println("~Login~");
 		System.out.println("Enter Username: ");
-		username.append(s.nextLine());
+		String username = s.nextLine();
 		System.out.println("Enter Password: ");
-		password.append(s.nextLine());
+		String password = s.nextLine();
+		try {
+			user = controller.loginController(username,password);
+			System.out.println("Login Succesfully");
+			inGameMenuScreen();
+		}catch(Exception e) {
+			System.out.println(e.toString());
+			mainScreen();
+		}				
 	}
-	public static void signUpScreen(StringBuilder username,StringBuilder password)
+	public void signUpScreen()
 	{
 		System.out.println("~SignUp~");
 		System.out.println("Enter Username: ");
-		username.append(s.nextLine());
+		String username = s.nextLine();
 		System.out.println("Enter Password: ");
-		password.append(s.nextLine());
+		String password = s.nextLine();
+		try {
+			controller.signupController(username,password);
+			System.out.println("User Added Succsefully");
+		}catch(Exception e) {
+			System.out.println(e.toString());
+		}	
+		mainScreen();
 	}
-	public static void inGameMenuScreen(User user)
+	public void inGameMenuScreen()
 	{
 		System.out.println(user);
 		System.out.println("1 - Play");
@@ -58,34 +81,44 @@ public class GameView {
 		switch (select)
 		{
 		case "1":
-			Controller.playController();
+			betScreen();
 			break;
 		case "2":
-			Controller.depositController();
+			depositScreen();
 			break;
 		case "3":
-			Controller.withdrawController();
+			withdrawScreen();
 			break;
 		case "4":
-			Controller.statisticsController();
+			statisticsScreen();
 			break;
 		case "5":
 			mainScreen();
 			break;
 	    default:
 			System.out.println("Invalid Input Please Try Again!");
-			inGameMenuScreen(user);
+			inGameMenuScreen();
 		}
 	}
-	public static String betScreen(User user)
+	public void betScreen()
 	{
 		System.out.println(user);
 		System.out.println("Enter Bet Amount: ");
-		return s.nextLine();
+		String betAmount = s.nextLine();
+		try {
+			game = controller.playController(betAmount);
+			System.out.println("Succsefull Bet Amount : " + betAmount);
+			playScreen();
+		}catch(Exception e) {
+			System.out.println(e.toString());
+			inGameMenuScreen();
+		}
 	}
-	public static void playScreen(GameManager game, User user)
+	public void playScreen()
 	{	
+		System.out.println(user);
 		System.out.println(game);
+		System.out.println("Hand : " + game.getPlayerHand());
 		System.out.println("1 - Hit");
 		System.out.println("2 - Hold");
 		System.out.println("3 - Double");
@@ -95,70 +128,75 @@ public class GameView {
 		switch (select)
 		{
 		case "1":
-			Controller.hitController(1);
+			if(controller.hitController())
+				playScreen();
+			else
+				endScreen();
 			break;
 		case "2":
-			Controller.holdController(1);
+			if(controller.holdController())
+				playScreen();
+			else
+				endScreen();
 			break;
 		case "3":
-			Controller.doubleController();
+			if (controller.doubleController())
+				playScreen();
+			else
+				endScreen();
 			break;
 		case "4":
-			Controller.splitController();
+			if(controller.splitController())
+				System.out.println("Split Succesfully");
+			playScreen();
 			break;
 		case "5":
-			Controller.surrenderController();
+			if(controller.surrenderController())
+				playScreen();
+			else
+				endScreen();
 			break;
 	    default:
 	    	System.out.println("Invalid Input Please Try Again!");
-	    	playScreen(game, user);
+	    	playScreen();
 		}
 	}
-	public static void splitScreen(GameManager game, User user,int hand)
+	public void endScreen()
 	{
 		System.out.println(game);
-		System.out.println("1 - Hit Hand " + hand);
-		System.out.println("2 - Hold Hand "+ hand);
-		String select = s.nextLine();
-		switch (select)
-		{
-		case "1":
-			Controller.hitController(hand);
-			break;
-		case "2":
-			Controller.holdController(hand);
-			break;
-	    default:
-	    	System.out.println("Invalid Input Please Try Again!");
-	    	splitScreen(game, user, hand);
-		}
+		System.out.println(game.endTurn());
+		controller.endController();
+		inGameMenuScreen();
 	}
-	public static void endScreen(String result, GameManager game)
-	{
-		System.out.println(game);
-		System.out.println(result);
-	}
-	public static String depositScreen(User user)
+	public void depositScreen()
 	{
 		System.out.println("~Deposit~");
 		System.out.println(user);
 		System.out.println("Enter Amount To Deposit: ");
-		return s.nextLine();
+		String amount = s.nextLine();
+		if (controller.depositController(amount))
+			System.out.println("Succsefully Added " + amount);
+		inGameMenuScreen();
 	}
-	public static String withdrawScreen(User user)
+	public void withdrawScreen()
 	{
 		System.out.println("~Withdraw~");
 		System.out.println(user);
 		System.out.println("Enter Amount To Withdraw: ");
-		return s.nextLine();
+		String amount = s.nextLine();
+		if (controller.withdrawController(amount))
+			System.out.println("Succsefully Taken " + amount);
+		inGameMenuScreen();
 	}
-	public static String statisticsScreen(User user)
+	public void statisticsScreen()
 	{
 		System.out.println("~Statistics~");
 		System.out.println(user);
 		System.out.print(user.getStatistics());
 		System.out.println("To Clear Statistics - clear");
 		System.out.println("Back - Any");
-		return s.nextLine();
+		if(controller.statisticsController(s.nextLine()))
+			statisticsScreen();
+		inGameMenuScreen();
 	}
 }

@@ -1,23 +1,30 @@
 package model;
 
 public class ChargeManager {
-	public static void Withdraw(User user,String amount)throws Exception {
+	public void Withdraw(User user,String amount)throws Exception {
 		invalidInput(amount);
 		int validAmount = Integer.parseInt(amount);
 		if (validAmount == 0)
 			throw new Exception("0 Cant Be Input");
 		if (validAmount > user.getBalance())
 			throw new Exception("Amount Less Than Money");
-		user.addBalance(-validAmount);
+		Withdraw(user,validAmount);
+	}
+	public void Withdraw(User user,int amount) {
+		user.addBalance(-amount);
 		FileManager.Update(user);
 	}
-	public static void Deposit(User user, String amount)throws Exception {
+	public void Deposit(User user, String amount)throws Exception {
 		invalidInput(amount);
 		int validAmount = Integer.parseInt(amount);
-		user.addBalance(validAmount);
+		Deposit(user,validAmount);
+	}
+	public void Deposit(User user, int amount)
+	{
+		user.addBalance(amount);
 		FileManager.Update(user);
 	}
-	private static void invalidInput(String amount) throws Exception
+	private void invalidInput(String amount) throws Exception
 	{
 		if (amount.equals(""))
 			throw new Exception ("No Input");
