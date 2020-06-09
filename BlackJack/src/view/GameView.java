@@ -1,18 +1,38 @@
 package view;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import controller.*;
 import model.*;
 
 public class GameView {
 	private static Scanner s = new Scanner(System.in);
-	private Controller controller = Controller.BuildController();
+	private GameController gameController;
+	private FileManager fileManager = FileManager.buildFileManager();
 	private User user;
 	private GameManager game;
 	public static void main(String[] args) 
 	{
 		GameView gameView = new GameView();
+		//gameView.Check();
 		gameView.mainScreen();
+	}
+	@SuppressWarnings("unchecked")
+	public void Check()
+	{  
+		 List<User> users = new ArrayList<User>();
+		 List<Statistic> statistics = new ArrayList<Statistic>();
+		 try {
+		 users = (ArrayList<User>)fileManager.read("allUsers.dat");
+		 statistics = (ArrayList<Statistic>)fileManager.read("statistics.dat");
+		 }catch (Exception a)
+		 { }
+		 for (int i=0;i < users.size();i++)
+		 {
+			 System.out.println(users.get(i));
+			 System.out.println(statistics.get(i));
+		 }
 	}
 	public void mainScreen()
 	{
@@ -46,7 +66,8 @@ public class GameView {
 		System.out.println("Enter Password: ");
 		String password = s.nextLine();
 		try {
-			user = controller.loginController(username,password);
+			user = RegisterContoller.BuildRegisterContoller().loginController(username, password);
+			gameController = GameController.BuildController(user);
 			System.out.println("Login Succesfully");
 			inGameMenuScreen();
 		}catch(Exception e) {
@@ -62,7 +83,7 @@ public class GameView {
 		System.out.println("Enter Password: ");
 		String password = s.nextLine();
 		try {
-			controller.signupController(username,password);
+			RegisterContoller.BuildRegisterContoller().signupController(username, password);
 			System.out.println("User Added Succsefully");
 		}catch(Exception e) {
 			System.out.println(e.toString());
@@ -106,7 +127,7 @@ public class GameView {
 		System.out.println("Enter Bet Amount: ");
 		String betAmount = s.nextLine();
 		try {
-			game = controller.playController(betAmount);
+			game = gameController.playController(betAmount);
 			System.out.println("Succsefull Bet Amount : " + betAmount);
 			playScreen();
 		}catch(Exception e) {
@@ -128,30 +149,30 @@ public class GameView {
 		switch (select)
 		{
 		case "1":
-			if(controller.hitController())
+			if(gameController.hitController())
 				playScreen();
 			else
 				endScreen();
 			break;
 		case "2":
-			if(controller.holdController())
+			if(gameController.holdController())
 				playScreen();
 			else
 				endScreen();
 			break;
 		case "3":
-			if (controller.doubleController())
+			if (gameController.doubleController())
 				playScreen();
 			else
 				endScreen();
 			break;
 		case "4":
-			if(controller.splitController())
+			if(gameController.splitController())
 				System.out.println("Split Succesfully");
 			playScreen();
 			break;
 		case "5":
-			if(controller.surrenderController())
+			if(gameController.surrenderController())
 				playScreen();
 			else
 				endScreen();
@@ -165,7 +186,7 @@ public class GameView {
 	{
 		System.out.println(game);
 		System.out.println(game.endTurn());
-		controller.endController();
+		gameController.endController();
 		inGameMenuScreen();
 	}
 	public void depositScreen()
@@ -174,7 +195,7 @@ public class GameView {
 		System.out.println(user);
 		System.out.println("Enter Amount To Deposit: ");
 		String amount = s.nextLine();
-		if (controller.depositController(amount))
+		if (ChargeContoller.BuildChargeContoller(user).depositController(amount))
 			System.out.println("Succsefully Added " + amount);
 		inGameMenuScreen();
 	}
@@ -184,7 +205,7 @@ public class GameView {
 		System.out.println(user);
 		System.out.println("Enter Amount To Withdraw: ");
 		String amount = s.nextLine();
-		if (controller.withdrawController(amount))
+		if (ChargeContoller.BuildChargeContoller(user).withdrawController(amount))
 			System.out.println("Succsefully Taken " + amount);
 		inGameMenuScreen();
 	}
@@ -192,10 +213,10 @@ public class GameView {
 	{
 		System.out.println("~Statistics~");
 		System.out.println(user);
-		System.out.print(user.getStatistics());
+		System.out.print(Statistic.getUserStatistic(user.getuserId()));
 		System.out.println("To Clear Statistics - clear");
 		System.out.println("Back - Any");
-		if(controller.statisticsController(s.nextLine()))
+		if(StatisticController.BuildStatisticController(user).statisticsController(s.nextLine()))
 			statisticsScreen();
 		inGameMenuScreen();
 	}

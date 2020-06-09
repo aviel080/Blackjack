@@ -1,8 +1,10 @@
 package model;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginManager {
+	private FileManager fileManager = FileManager.buildFileManager();
 	public User userLogin(String userName,String password) throws Exception
 	{
 		User fileUser = userExists(userName);
@@ -11,7 +13,8 @@ public class LoginManager {
 	}
 	private User userExists(String userName)throws Exception
 	{
-		Set<User> users = FileManager.read();
+		@SuppressWarnings("unchecked")
+		List<User> users = (ArrayList<User>)fileManager.read("allUsers.dat");
 		for (User a : users)
 		{
 			if (a.getUserName().equals(userName))

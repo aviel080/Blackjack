@@ -1,16 +1,46 @@
 package model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import lombok.Builder;
+import lombok.ToString;
+
+@Builder
 public class User implements Serializable  {
 	
 	private static final long serialVersionUID = 1L;
+	private static FileManager fileManager = FileManager.buildFileManager();
 	private String userName;
 	private String password;
-	private Statistic statistics;
 	private int balance;
+	private int userId;
 	
-	private User()	{		
+	public User(String userName, String password, int balance,int userId) 
+	{
+		this.userName = userName;
+		this.password = password;
+		this.balance = balance;
+		this.userId = getLastId();
+	}
+	private int getLastId()
+	{
+		try {
+		@SuppressWarnings("unchecked")
+		List<User> users = (ArrayList<User>)fileManager.read("allUsers.dat");
+		if (users == null)
+			return 0;
+		return users.size();
+		}catch (Exception e)
+		{
+			e.printStackTrace();
+			System.exit(1);
+			return -1;
+		}
+	}
+	public int getuserId() {
+		return userId;
 	}
 	public int getBalance() {
 		return balance;
@@ -23,10 +53,6 @@ public class User implements Serializable  {
 		User user = (User)obj;
 		return this.userName.equals(user.userName);
 	}
-	@Override
-	public int hashCode() {
-		return userName.hashCode();
-	}
 	public String getPassword() {
 		return password;
 	}
@@ -36,56 +62,5 @@ public class User implements Serializable  {
 	@Override
 	public String toString() {
 		return "Hello " + userName +",\n" + "Money Amount: " + balance;		 
-	}
-	public String getStatistics()
-	{
-		String result = "";
-		result += "Hands Played: " + statistics.gethandsPlayed() + "\n";
-		result += statistics.getHandsBlackjack();
-		result += statistics.getHandsWin();
-		result += statistics.getHandsLose();
-		result += statistics.getHandsTie();
-		result += statistics.getHandsSurrender();
-		return result;
-	}
-	public void updateStatistics(String handStatus)
-	{
-		statistics.updateStatistic(handStatus);
-	}
-	public void clearStatistics()
-	{
-		statistics = new Statistic();
-	}
-	public static class UserBuilder {
-		private String userName;
-		private String password;
-		private Statistic statistics = new Statistic();
-		private int balance = 0;
-				
-		public UserBuilder withUserName(String userName) {
-			this.userName = userName;
-			return this;
-		}
-		public UserBuilder withPassword(String password) {
-			this.password = password;
-			return this;
-		}
-		public UserBuilder withStatistics(Statistic statistics) {
-			this.statistics = statistics;
-			return this;
-		}
-		public UserBuilder withBalance(int balance) {
-			this.balance = balance;
-			return this;
-		}
-		public User build()
-		{
-			User user = new User();
-			user.userName = this.userName;
-			user.password = this.password;
-			user.statistics = this.statistics;
-			user.balance = this.balance;
-			return user;
-		}
 	}
 }

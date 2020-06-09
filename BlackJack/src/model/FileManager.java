@@ -7,34 +7,45 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileManager {
+	private static FileManager fileManager= null;
 	
-	private static final String filename = "allUsers.dat";
+	private FileManager()	{
 		
-	public static void write(Set<User> object) throws IOException {
+	}
+	public static FileManager buildFileManager()
+	{
+		if (fileManager == null)
+			fileManager = new FileManager();
+		return fileManager;
+	}
+	
+	public void write(Object object, String filename) throws IOException {
 		try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(filename))) {
 			objectOutputStream.writeObject(object);
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static Set<User> read() throws FileNotFoundException, IOException, ClassNotFoundException {
+	public Object read(String filename) throws FileNotFoundException, IOException, ClassNotFoundException {
 		if ((new File(filename)).exists() == false)
-			return new HashSet<User>();
+			return null;
 		try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filename))) {
-			return (Set<User>) objectInputStream.readObject();
+			return objectInputStream.readObject();
 		}
 	}
-	public static void Update(User user)
+	public <T> void Update(T object,String filename)
 	{
 		try{
-		Set<User> users = read();
-		users.remove(user);//old
-		users.add(user);//new
-		write(users);
+		@SuppressWarnings("unchecked")
+		List<T> objects = (ArrayList<T>) read(filename);
+		if (objects == null)
+			objects = new ArrayList<T>();
+		objects.remove(object);//old
+		objects.add(object);//new
+		write(objects,filename);
 		}catch(Exception e){
 			e.printStackTrace();
 			System.exit(1);

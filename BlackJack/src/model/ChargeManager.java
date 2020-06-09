@@ -1,6 +1,7 @@
 package model;
 
 public class ChargeManager {
+	private FileManager fileManager = FileManager.buildFileManager();
 	public void Withdraw(User user,String amount)throws Exception {
 		invalidInput(amount);
 		int validAmount = Integer.parseInt(amount);
@@ -12,7 +13,7 @@ public class ChargeManager {
 	}
 	public void Withdraw(User user,int amount) {
 		user.addBalance(-amount);
-		FileManager.Update(user);
+		fileManager.Update(user , "allUsers.dat");
 	}
 	public void Deposit(User user, String amount)throws Exception {
 		invalidInput(amount);
@@ -22,7 +23,7 @@ public class ChargeManager {
 	public void Deposit(User user, int amount)
 	{
 		user.addBalance(amount);
-		FileManager.Update(user);
+		fileManager.Update(user,"allUsers.dat");
 	}
 	private void invalidInput(String amount) throws Exception
 	{

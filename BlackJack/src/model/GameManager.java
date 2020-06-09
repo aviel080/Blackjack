@@ -107,8 +107,8 @@ public class GameManager {
 			throw new Exception("Already Splited");
 		if(player.handSize() != 2)
 			throw new Exception ("Player Hand Size Is Not 2");
-		//if(player.getCard(0).getNumber() != player.getCard(1).getNumber())
-			//throw new Exception ("Player Cards Not Same");
+		if(player.getCard(0).getNumber() != player.getCard(1).getNumber())
+			throw new Exception ("Player Cards Not Same");
 		player.secondHandPushCard(player.removeCard());
 		player.pushCard(gameDeck.pull());
 		player.secondHandPushCard(gameDeck.pull());
