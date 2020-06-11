@@ -1,12 +1,13 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import model.User.UserBuilder;
 
 public class SignUpManager {
-	private FileManager fileManager = FileManager.buildFileManager();
+	private static UserRepository userRepository = UserRepository.BuildUserRepository();
+	private static StatisticsRepository statisticsRepository = StatisticsRepository.BuildStatisticsRepository();
 	
 	public void signNewUser(String userName,String password) throws Exception
 	{
@@ -17,31 +18,32 @@ public class SignUpManager {
 		newUser.userName(userName);
 		newUser.password(password);
 		User user =	newUser.build();
-		fileManager.Update(user,"allUsers.dat");
-	    fileManager.Update(new Statistic(user.getuserId()), "statistics.dat");
+		userRepository.Update(user);
+		statisticsRepository.Update(new Statistic(user.getuserId()));
 	}	
 	private void userNameValidation(String userName)throws Exception
 	{
+		if(userName.contains(" "))
+			throw new Exception("Spaces Not Allowed");
 		if (userName.length() < 3)
-			throw new Exception("userName length less than 3 letters");
+			throw new Exception("UserName Length Less Than 3 Letters");
 		if (userName.length() > 10)
-			throw new Exception("userName length more than 10 letters");
+			throw new Exception("UserName Length More Than 10 Letters");
 	}
 	
 	private void passwordValidation(String password)throws Exception
 	{
 		if (password.length() < 3)
-			throw new Exception("password length less than 3 letters");
+			throw new Exception("Password Length Less Than 3 Letters");
 		if (password.length() > 10)
-			throw new Exception("password length more than 10 letters");
+			throw new Exception("Password Length More Than 10 Letters");
 	}
 	
 	private void userNameAvailable(String userName)throws Exception
 	{
-		@SuppressWarnings("unchecked")
-		List<User> users = (ArrayList<User>)fileManager.read("allUsers.dat");
+		Set<User> users = userRepository.getUsers();
 		if (users == null)
-			users = new ArrayList<User>();
+			users = new HashSet<User>();
 		for (User a : users)
 		{
 			if (a.getUserName().toUpperCase().equals(userName.toUpperCase()))

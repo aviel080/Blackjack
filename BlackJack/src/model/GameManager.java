@@ -195,7 +195,7 @@ public class GameManager {
 	    if (result.equals("Tie "))
 	    	return Amount;
 	    if (result.equals("Surrender "))
-	    	return (int)(Amount / 2);
+	    	return Amount / 2;
 	    return 0;//LOSE
 	}
 	@Override

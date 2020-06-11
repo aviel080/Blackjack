@@ -133,4 +133,15 @@ class GameManagerTests
 		assertEquals("Tie ", game.checkHandResult(1));
 		assertEquals(100, game.calcMoney());
 	}
+	@Test
+	void userNameSpace()
+	{
+		SignUpManager signUpManager = new SignUpManager();
+		try {
+		signUpManager.signNewUser("ab c", "password");
+		fail("FAIL");
+		}catch (Exception e) {
+			assertEquals("Spaces Not Allowed", e.getMessage());
+		}
+	}
 }

@@ -7,48 +7,30 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-public class FileManager {
-	private static FileManager fileManager= null;
-	
-	private FileManager()	{
-		
+public class FileManager<T> {
+	private String filename;
+
+	public FileManager(String filename){
+		this.filename = filename;
 	}
-	public static FileManager buildFileManager()
-	{
-		if (fileManager == null)
-			fileManager = new FileManager();
-		return fileManager;
-	}
-	
-	public void write(Object object, String filename) throws IOException {
+
+	public void write(Set<T> objects) throws IOException {
 		try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(filename))) {
-			objectOutputStream.writeObject(object);
+			objectOutputStream.writeObject(objects);
 		}
 	}
-	
-	public Object read(String filename) throws FileNotFoundException, IOException, ClassNotFoundException {
-		if ((new File(filename)).exists() == false)
-			return null;
+	private boolean isFileExists() {
+		File file = new File(filename);
+		return file.exists();
+	}
+	public Object read() throws FileNotFoundException, IOException, ClassNotFoundException {
+		if (isFileExists() == false)
+			return new HashSet<T>();
 		try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(filename))) {
 			return objectInputStream.readObject();
-		}
-	}
-	public <T> void Update(T object,String filename)
-	{
-		try{
-		@SuppressWarnings("unchecked")
-		List<T> objects = (ArrayList<T>) read(filename);
-		if (objects == null)
-			objects = new ArrayList<T>();
-		objects.remove(object);//old
-		objects.add(object);//new
-		write(objects,filename);
-		}catch(Exception e){
-			e.printStackTrace();
-			System.exit(1);
 		}
 	}
 }

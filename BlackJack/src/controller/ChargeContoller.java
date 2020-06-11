@@ -16,26 +16,12 @@ public class ChargeContoller {
 		chargeContoller.user = user;
 		return chargeContoller;
 	}
-	public boolean depositController(String amount)
+	public void depositController(String amount) throws Exception
 	{
-		try {
 		chargeManager.Deposit(user, amount);
-		}
-		catch(Exception e){	
-			System.out.println(e.toString());
-			return false;
-		}
-		return true;
 	}
-	public boolean withdrawController(String amount)
+	public void withdrawController(String amount) throws Exception
 	{
-		try {
 		chargeManager.Withdraw(user, amount);
-		}
-		catch(Exception e){	
-			System.out.println(e.toString());
-			return false;
-		}
-		return true;
 	}
 }

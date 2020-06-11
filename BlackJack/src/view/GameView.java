@@ -1,38 +1,35 @@
 package view;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
+
 import controller.*;
 import model.*;
 
 public class GameView {
 	private static Scanner s = new Scanner(System.in);
 	private GameController gameController;
-	private FileManager fileManager = FileManager.buildFileManager();
 	private User user;
 	private GameManager game;
-	public static void main(String[] args) 
+	public static void main(String[] args) throws Exception
 	{
 		GameView gameView = new GameView();
-		//gameView.Check();
+		gameView.Check();
 		gameView.mainScreen();
 	}
-	@SuppressWarnings("unchecked")
 	public void Check()
 	{  
-		 List<User> users = new ArrayList<User>();
-		 List<Statistic> statistics = new ArrayList<Statistic>();
+		 UserRepository userRepository = UserRepository.BuildUserRepository();
+		 StatisticsRepository statisticsRepository = StatisticsRepository.BuildStatisticsRepository();
+		 Set<User> users = null;
+		 Set<Statistic> statistics = null;
 		 try {
-		 users = (ArrayList<User>)fileManager.read("allUsers.dat");
-		 statistics = (ArrayList<Statistic>)fileManager.read("statistics.dat");
+		 users = userRepository.getUsers();
+		 statistics = statisticsRepository.getStatistics();
 		 }catch (Exception a)
 		 { }
-		 for (int i=0;i < users.size();i++)
-		 {
-			 System.out.println(users.get(i));
-			 System.out.println(statistics.get(i));
-		 }
+		 System.out.println(users);
+		 System.out.println(statistics);
 	}
 	public void mainScreen()
 	{
@@ -40,54 +37,53 @@ public class GameView {
 		System.out.println("1 - Login");
 		System.out.println("2 - Signup");
 		System.out.println("Q - Quit");
-		String select = s.nextLine();
-		switch (select)
-		{
-		case "1":
-			loginScreen();
-			break;
-		case "2":
-			signUpScreen();
-			break;
-		case "q":
-		case "Q":
-			System.out.println("Bye!");
-			System.exit(0);
-	    default:
-			System.out.println("Invalid Input Please Try Again!");
-	    	mainScreen(); 
+		String select= s.nextLine();
+		switch (select){
+			case "1":
+				loginScreen();
+				break;
+			case "2":
+				signUpScreen();
+				break;
+			case "q":
+			case "Q":
+				System.out.println("Bye!");
+				System.exit(0);
+	    	default:
+	    		System.out.println("Invalid Input Please Try Again!");
+	    		mainScreen();
+			}
 		}
-	}
 	public void loginScreen()
 	{
+		try {
 		System.out.println("~Login~");
 		System.out.println("Enter Username: ");
 		String username = s.nextLine();
 		System.out.println("Enter Password: ");
 		String password = s.nextLine();
-		try {
-			user = RegisterContoller.BuildRegisterContoller().loginController(username, password);
-			gameController = GameController.BuildController(user);
-			System.out.println("Login Succesfully");
-			inGameMenuScreen();
+		user = RegisterContoller.BuildRegisterContoller().loginController(username, password);
+		gameController = GameController.BuildController(user);
+		System.out.println("Login Succesfully");
+		inGameMenuScreen();
 		}catch(Exception e) {
-			System.out.println(e.toString());
+			System.out.println(e.getMessage());
 			mainScreen();
 		}				
 	}
 	public void signUpScreen()
 	{
+		try {
 		System.out.println("~SignUp~");
 		System.out.println("Enter Username: ");
 		String username = s.nextLine();
 		System.out.println("Enter Password: ");
 		String password = s.nextLine();
-		try {
-			RegisterContoller.BuildRegisterContoller().signupController(username, password);
-			System.out.println("User Added Succsefully");
-		}catch(Exception e) {
-			System.out.println(e.toString());
-		}	
+		RegisterContoller.BuildRegisterContoller().signupController(username, password);
+		System.out.println("User Added Succsefully");
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
 		mainScreen();
 	}
 	public void inGameMenuScreen()
@@ -123,15 +119,15 @@ public class GameView {
 	}
 	public void betScreen()
 	{
+		try {
 		System.out.println(user);
 		System.out.println("Enter Bet Amount: ");
 		String betAmount = s.nextLine();
-		try {
-			game = gameController.playController(betAmount);
-			System.out.println("Succsefull Bet Amount : " + betAmount);
-			playScreen();
+		game = gameController.playController(betAmount);
+		System.out.println("Succsefull Bet Amount : " + betAmount);
+		playScreen();
 		}catch(Exception e) {
-			System.out.println(e.toString());
+			System.out.println(e.getMessage());
 			inGameMenuScreen();
 		}
 	}
@@ -161,14 +157,21 @@ public class GameView {
 				endScreen();
 			break;
 		case "3":
-			if (gameController.doubleController())
-				playScreen();
-			else
+			try {
+				gameController.doubleController();
 				endScreen();
+			}catch (Exception e) {
+				System.out.println(e.getMessage());
+				playScreen();
+			}
 			break;
 		case "4":
-			if(gameController.splitController())
+			try {
+				gameController.splitController();
 				System.out.println("Split Succesfully");
+			}catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
 			playScreen();
 			break;
 		case "5":
@@ -195,8 +198,12 @@ public class GameView {
 		System.out.println(user);
 		System.out.println("Enter Amount To Deposit: ");
 		String amount = s.nextLine();
-		if (ChargeContoller.BuildChargeContoller(user).depositController(amount))
+		try {
+			ChargeContoller.BuildChargeContoller(user).depositController(amount);
 			System.out.println("Succsefully Added " + amount);
+		}catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 		inGameMenuScreen();
 	}
 	public void withdrawScreen()
@@ -205,8 +212,12 @@ public class GameView {
 		System.out.println(user);
 		System.out.println("Enter Amount To Withdraw: ");
 		String amount = s.nextLine();
-		if (ChargeContoller.BuildChargeContoller(user).withdrawController(amount))
+		try {
+			ChargeContoller.BuildChargeContoller(user).withdrawController(amount);
 			System.out.println("Succsefully Taken " + amount);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 		inGameMenuScreen();
 	}
 	public void statisticsScreen()

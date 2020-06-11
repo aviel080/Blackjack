@@ -37,35 +37,22 @@ public class GameController {
 	{
 		return game.playerHold(); 
 	}
-	public boolean splitController()
+	public void splitController() throws Exception
 	{
-		try{
-			if(user.getBalance() < game.getBetAmount(1))
-				throw new Exception("Not Enough Money");
-			game.playerSplit();
-		}catch (Exception e){
-			System.out.println(e.toString());
-			return false;
-		}
+		if(user.getBalance() < game.getBetAmount(1))
+			throw new Exception("Not Enough Money");
+		game.playerSplit();
 		chargeManager.Withdraw(user,game.getBetAmount(1));
 		game.setBetAmount(game.getBetAmount(1) , 2);
-		return true;
 	}
-	public boolean doubleController()
+	public void doubleController() throws Exception
 	{
-		boolean status;
 		int hand = game.getPlayerHand();
-		try {
-			if(user.getBalance() < game.getBetAmount(hand))
-				throw new Exception("Not Enough Money");
-			status = game.playerDouble();
-		} catch(Exception e){	
-			System.out.println(e.toString());
-			return true;
-		}
+		if(user.getBalance() < game.getBetAmount(hand))
+			throw new Exception("Not Enough Money");
+		game.playerDouble();
 		chargeManager.Withdraw(user, game.getBetAmount(hand));
 		game.setBetAmount(game.getBetAmount(hand) * 2, hand);
-		return status;
 	}
 	public boolean surrenderController()
 	{

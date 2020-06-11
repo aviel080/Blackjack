@@ -1,13 +1,11 @@
 package model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.Set;
 
 public class Statistic implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private static FileManager fileManager = FileManager.buildFileManager();
+	private static StatisticsRepository statisticsRepository = StatisticsRepository.BuildStatisticsRepository();
 	private int handsPlayed = 0;
 	private int handsBlackjack = 0;
 	private int handsWin = 0;
@@ -24,17 +22,26 @@ public class Statistic implements Serializable {
 	public boolean equals(Object obj) {
 		return this.userId == ((Statistic)obj).userId;
 	}
+	@Override
+	public int hashCode() {
+		return Integer.hashCode(userId);
+	}
 	public static Statistic getUserStatistic(int userId)
 	{
 		try {
-		@SuppressWarnings("unchecked")
-		List<Statistic> statistic = (ArrayList<Statistic>)fileManager.read("statistics.dat");
-		return statistic.get(userId);
+		Set<Statistic> statistic = statisticsRepository.getStatistics();
+		if (statistic.contains(new Statistic(userId)) == false)
+			throw new Exception ("Somthing Went Wrong...");
+		for (Statistic a : statistic)
+		{
+			if(a.equals(new Statistic(userId)))
+				return a;
+		}
 		}catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
-			return null;
 		}
+		return null;
 
 	}
 	public void updateStatistic(String handstatus)
@@ -50,7 +57,7 @@ public class Statistic implements Serializable {
 			handsTie++;
 		if (handstatus.equals("Surrender "))
 			handsSurrender++;
-		fileManager.Update(this, "statistics.dat");
+		statisticsRepository.Update(this);
 	}
 	public int gethandsPlayed() {
 		return handsPlayed;
@@ -80,6 +87,7 @@ public class Statistic implements Serializable {
 	@Override
 	public String toString() {
 		String result = "";
+		result += userId + "\n";
 		result += "Hands Played: " + gethandsPlayed() + "\n";
 		result += getHandsBlackjack();
 		result += getHandsWin();
@@ -96,6 +104,6 @@ public class Statistic implements Serializable {
 		handsLose = 0;
 		handsTie = 0;	
 	    handsSurrender = 0;
-		fileManager.Update(this, "statistics.dat");
+	    statisticsRepository.Update(this);
 	}
 }
