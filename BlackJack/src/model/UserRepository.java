@@ -42,4 +42,13 @@ public class UserRepository {
 	{
 		return users;
 	}
+	public User getUser(String userName) 
+	{
+		for (User a : users)
+		{
+			if (a.getUserName().equals(userName))
+				return a;
+		}
+		return null;
+	}
 }

@@ -1,7 +1,8 @@
 package model;
 
 public class ChargeManager {
-	private static UserRepository userRepository = UserRepository.BuildUserRepository();
+	private UserRepository userRepository = UserRepository.BuildUserRepository();
+	private StatisticsRepository statisticsRepository = StatisticsRepository.BuildStatisticsRepository();
 	public void Withdraw(User user,String amount)throws Exception {
 		invalidInput(amount);
 		int validAmount = Integer.parseInt(amount);
@@ -19,6 +20,11 @@ public class ChargeManager {
 		invalidInput(amount);
 		int validAmount = Integer.parseInt(amount);
 		Deposit(user,validAmount);
+		if (user.getMode())
+		{
+			statisticsRepository.getUserStatistic(user).updateDepositHistory(validAmount);
+			statisticsRepository.Update(statisticsRepository.getUserStatistic(user));
+		}
 	}
 	public void Deposit(User user, int amount)
 	{

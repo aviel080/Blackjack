@@ -1,9 +1,7 @@
 package model;
 
-import java.util.Set;
-
 public class LoginManager {
-	private static UserRepository userRepository = UserRepository.BuildUserRepository();
+	private UserRepository userRepository = UserRepository.BuildUserRepository();
 	public User userLogin(String userName,String password) throws Exception
 	{
 		User fileUser = userExists(userName);
@@ -12,13 +10,10 @@ public class LoginManager {
 	}
 	private User userExists(String userName)throws Exception
 	{
-		Set<User> users = userRepository.getUsers();
-		for (User a : users)
-		{
-			if (a.getUserName().equals(userName))
-				return a;
-		}
-		throw new Exception("Username Does Not Exists");
+		User user = userRepository.getUser(userName);
+		if(user == null)
+			throw new Exception("User Doesn't Exists");
+		return user;
 	}
 	private void passwordMatch(User user,String password)throws Exception
 	{

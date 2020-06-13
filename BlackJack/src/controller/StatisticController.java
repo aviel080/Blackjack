@@ -1,12 +1,15 @@
 package controller;
 
 import model.Statistic;
+import model.StatisticsRepository;
 import model.User;
 
 public class StatisticController {
 	private static StatisticController statisticController = null;
 	private User user;
+	private StatisticsRepository statisticsRepository;
 	private StatisticController() {
+		statisticsRepository = StatisticsRepository.BuildStatisticsRepository();
 	}
 	public static StatisticController BuildStatisticController(User user)
 	{	
@@ -19,7 +22,9 @@ public class StatisticController {
 	{
 		if(choose.equals("clear"))
 		{
-			Statistic.getUserStatistic(user.getuserId()).clearStatistics();
+			Statistic update = statisticsRepository.getUserStatistic(user);
+			update.clearStatistics();
+			statisticsRepository.Update(update);
 			return true;
 		}
 		return false;

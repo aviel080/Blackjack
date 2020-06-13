@@ -10,27 +10,56 @@ import lombok.ToString;
 public class User implements Serializable  {
 	
 	private static final long serialVersionUID = 1L;
-	private static UserRepository userRepository = UserRepository.BuildUserRepository();
 	private String userName;
 	private String password;
-	private int balance;
-	private int userId;
+	private int virtualMoney;
+	private int realMoney;
+	private boolean realPlay;
 	
-	public User(String userName, String password, int balance,int userId) 
+	public User(String userName, String password, int virtualMoney,int realMoney, boolean realPlay) 
 	{
 		this.userName = userName;
 		this.password = password;
-		this.balance = balance;
-		this.userId = userRepository.getSize();
+		this.virtualMoney = virtualMoney;
+		this.realMoney = realMoney;
+		this.realPlay = realPlay;
 	}
-	public int getuserId() {
-		return userId;
+	public void changeMode()
+	{
+		realPlay = realPlay ^ true;
 	}
-	public int getBalance() {
-		return balance;
+	public boolean getMode()
+	{
+		return realPlay;
+	}
+	public int getRealMoney() {
+		return realMoney;
+	}
+	public int getVirtualMoney() {
+		return virtualMoney;
 	}
 	public void addBalance(int amount) {
-		balance += amount;
+		if (realPlay)
+			realMoney += amount;
+
+		else
+			virtualMoney += amount;
+	}
+	public int getBalance()
+	{
+		if (realPlay)
+			return realMoney;
+		return virtualMoney;
+	}
+	public String getModeString()
+	{
+		String result = "";
+		if (realPlay)
+			result += "Real ";
+		else
+			result += "Virtual ";
+		result += "Money Mode!";
+		return result;
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -39,7 +68,7 @@ public class User implements Serializable  {
 	}
 	@Override
 	public int hashCode() {
-		return Integer.hashCode(userId);
+		return userName.hashCode();
 	}
 	public String getPassword() {
 		return password;

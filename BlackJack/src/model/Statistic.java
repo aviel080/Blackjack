@@ -1,48 +1,37 @@
 package model;
 
 import java.io.Serializable;
-import java.util.Set;
 
+import lombok.ToString;
+
+@ToString
 public class Statistic implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private static StatisticsRepository statisticsRepository = StatisticsRepository.BuildStatisticsRepository();
+	
 	private int handsPlayed = 0;
 	private int handsBlackjack = 0;
 	private int handsWin = 0;
 	private int handsLose = 0;
 	private int handsTie = 0;	
 	private int handsSurrender = 0;
-	private int userId;
+	private int depositHistory =0;
+	private String userName;
 	
-	public Statistic(int userId)
+	public Statistic(String userName)
 	{
-		this.userId = userId;
+		this.userName = userName;
+	}
+	public void updateDepositHistory(int amount)
+	{
+		depositHistory += amount;
 	}
 	@Override
 	public boolean equals(Object obj) {
-		return this.userId == ((Statistic)obj).userId;
+		return this.userName.equals(((Statistic)obj).userName);
 	}
 	@Override
 	public int hashCode() {
-		return Integer.hashCode(userId);
-	}
-	public static Statistic getUserStatistic(int userId)
-	{
-		try {
-		Set<Statistic> statistic = statisticsRepository.getStatistics();
-		if (statistic.contains(new Statistic(userId)) == false)
-			throw new Exception ("Somthing Went Wrong...");
-		for (Statistic a : statistic)
-		{
-			if(a.equals(new Statistic(userId)))
-				return a;
-		}
-		}catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		return null;
-
+		return userName.hashCode();
 	}
 	public void updateStatistic(String handstatus)
 	{
@@ -57,25 +46,6 @@ public class Statistic implements Serializable {
 			handsTie++;
 		if (handstatus.equals("Surrender "))
 			handsSurrender++;
-		statisticsRepository.Update(this);
-	}
-	public int gethandsPlayed() {
-		return handsPlayed;
-	}
-	public String getHandsBlackjack() {
-		return "Hands BlackJack: "+ handsBlackjack + " (" + calcPrecent(handsBlackjack) + "%)\n";
-	}
-	public String getHandsWin() {
-		return "Hands Win: "+ handsWin + " (" + calcPrecent(handsWin) + "%)\n";
-	}
-	public String getHandsLose() {
-		return "Hands Lose: "+ handsLose + " (" + calcPrecent(handsLose) + "%)\n";
-	}
-	public String getHandsTie() {
-		return "Hands Tie: "+ handsTie + " (" + calcPrecent(handsTie) + "%)\n";
-	}
-	public String getHandsSurrender() {
-		return "Hands Surrender: "+ handsSurrender + " (" + calcPrecent(handsSurrender) + "%)\n";
 	}
 	private int calcPrecent (int num)
 	{
@@ -84,16 +54,16 @@ public class Statistic implements Serializable {
 		else
 			return (int)(((double) num /handsPlayed)* 100);
 	}
-	@Override
-	public String toString() {
+	public String Check() {
+		String [] message = {"BlackJack","Win","Lose","Tie","Surrender"};
+		int [] numbers = {handsBlackjack,handsWin,handsLose,handsTie,handsSurrender}; 
 		String result = "";
-		result += userId + "\n";
-		result += "Hands Played: " + gethandsPlayed() + "\n";
-		result += getHandsBlackjack();
-		result += getHandsWin();
-		result += getHandsLose();
-		result += getHandsTie();
-		result += getHandsSurrender();
+		result += userName + "\n";
+		result += "Hands Played: " + handsPlayed + "\n";
+		for (int i=0;i<5;i++) {
+			result += "Hands " + message[i] + ": " + numbers[i] +  " (" + calcPrecent(numbers[i]) + "%)\n";
+		}
+		result += "Deposit History: " + depositHistory +"$\n";
 		return result;
 	}
 	public void clearStatistics()
@@ -104,6 +74,5 @@ public class Statistic implements Serializable {
 		handsLose = 0;
 		handsTie = 0;	
 	    handsSurrender = 0;
-	    statisticsRepository.Update(this);
 	}
 }

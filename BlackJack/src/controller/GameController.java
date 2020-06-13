@@ -4,14 +4,21 @@ import model.*;
 
 public class GameController {
 	private static GameController controller = null;
-	private ChargeManager chargeManager = new ChargeManager();
+	private ChargeManager chargeManager;
 	private User user;
 	private GameManager game;
+	private Statistic userStatistics;
+	private StatisticsRepository statisticsRepository;
+	private GameController() {
+		statisticsRepository = StatisticsRepository.BuildStatisticsRepository();
+		chargeManager = new ChargeManager();
+	}
 	public static GameController BuildController(User user)
 	{	
 		if (controller == null)
 			controller = new GameController();
 		controller.user = user;
+		controller.userStatistics = controller.statisticsRepository.getUserStatistic(user);
 		return controller;
 	}
 	public GameManager playController(String betAmount) throws Exception
@@ -29,9 +36,10 @@ public class GameController {
 	public void endController()
 	{
 		chargeManager.Deposit(user, game.calcMoney());
-		Statistic.getUserStatistic(user.getuserId()).updateStatistic(game.checkHandResult(1));
+		userStatistics.updateStatistic(game.checkHandResult(1));
 		if(game.isSplit())
-			Statistic.getUserStatistic(user.getuserId()).updateStatistic(game.checkHandResult(2));
+			userStatistics.updateStatistic(game.checkHandResult(2));
+		statisticsRepository.Update(userStatistics);
 	}
 	public boolean holdController()
 	{

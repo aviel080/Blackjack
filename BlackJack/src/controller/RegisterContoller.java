@@ -6,11 +6,12 @@ import model.User;
 
 public class RegisterContoller {
 	private static RegisterContoller registerContoller = null;
-	private LoginManager loginManager= new LoginManager();
-	private SignUpManager signUpManager= new SignUpManager();
+	private LoginManager loginManager;
+	private SignUpManager signUpManager;
 	private User user;
 	private RegisterContoller() {
-		
+		loginManager= new LoginManager();
+		signUpManager= new SignUpManager();
 	}
 	public static RegisterContoller BuildRegisterContoller()
 	{

@@ -5,13 +5,13 @@ import java.util.Set;
 public class StatisticsRepository {
 	private static StatisticsRepository statisticsRepository;
 	private FileManager<Statistic> fileManager;
-	private Set<Statistic> Statistics;
+	private Set<Statistic> statistics;
 	@SuppressWarnings("unchecked")
 	private StatisticsRepository()
 	{
 		fileManager = new FileManager<Statistic>("statistics.dat");
 		try {
-		Statistics = (Set<Statistic>) fileManager.read();
+		statistics = (Set<Statistic>) fileManager.read();
 		}catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -26,9 +26,9 @@ public class StatisticsRepository {
 	public void Update(Statistic Statistic)
 	{
 		try{
-		Statistics.remove(Statistic);//old
-		Statistics.add(Statistic);//new
-		fileManager.write(Statistics);
+		statistics.remove(Statistic);//old
+		statistics.add(Statistic);//new
+		fileManager.write(statistics);
 		}catch(Exception e){
 			e.printStackTrace();
 			System.exit(1);
@@ -36,6 +36,24 @@ public class StatisticsRepository {
 	}
 	public Set<Statistic> getStatistics()
 	{
-		return Statistics;
+		return statistics;
+	}
+	public Statistic getUserStatistic(User user)
+	{
+		try {
+		String userName = user.getUserName();
+		if (statistics.contains(new Statistic(userName)) == false)
+			throw new Exception ("Somthing Went Wrong...");
+		for (Statistic a : statistics)
+		{
+			if(a.equals(new Statistic(userName)))
+				return a;
+		}
+		}catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return null;
+
 	}
 }

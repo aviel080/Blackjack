@@ -1,13 +1,12 @@
 package model;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import model.User.UserBuilder;
 
 public class SignUpManager {
-	private static UserRepository userRepository = UserRepository.BuildUserRepository();
-	private static StatisticsRepository statisticsRepository = StatisticsRepository.BuildStatisticsRepository();
+	private UserRepository userRepository = UserRepository.BuildUserRepository();
+	private StatisticsRepository statisticsRepository = StatisticsRepository.BuildStatisticsRepository();
 	
 	public void signNewUser(String userName,String password) throws Exception
 	{
@@ -19,7 +18,7 @@ public class SignUpManager {
 		newUser.password(password);
 		User user =	newUser.build();
 		userRepository.Update(user);
-		statisticsRepository.Update(new Statistic(user.getuserId()));
+		statisticsRepository.Update(new Statistic(user.getUserName()));
 	}	
 	private void userNameValidation(String userName)throws Exception
 	{
@@ -42,8 +41,6 @@ public class SignUpManager {
 	private void userNameAvailable(String userName)throws Exception
 	{
 		Set<User> users = userRepository.getUsers();
-		if (users == null)
-			users = new HashSet<User>();
 		for (User a : users)
 		{
 			if (a.getUserName().toUpperCase().equals(userName.toUpperCase()))

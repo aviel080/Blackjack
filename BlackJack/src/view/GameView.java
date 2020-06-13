@@ -1,5 +1,6 @@
 package view;
 
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -14,6 +15,14 @@ public class GameView {
 	public static void main(String[] args) throws Exception
 	{
 		GameView gameView = new GameView();
+		/*
+		for (int i=0;i<5;i++)
+		{
+			Random rnd = new Random();
+			int num = rnd.nextInt(100000000) + 1000;
+			RegisterContoller.BuildRegisterContoller().signupController(String.valueOf(num), "password");
+		}
+		*/
 		gameView.Check();
 		gameView.mainScreen();
 	}
@@ -22,14 +31,17 @@ public class GameView {
 		 UserRepository userRepository = UserRepository.BuildUserRepository();
 		 StatisticsRepository statisticsRepository = StatisticsRepository.BuildStatisticsRepository();
 		 Set<User> users = null;
-		 Set<Statistic> statistics = null;
 		 try {
 		 users = userRepository.getUsers();
-		 statistics = statisticsRepository.getStatistics();
-		 }catch (Exception a)
-		 { }
-		 System.out.println(users);
-		 System.out.println(statistics);
+		 }catch (Exception a) { 
+			 
+		 }
+		 System.out.println(statisticsRepository.getStatistics());
+		 for (User a : users)
+		 {
+			 System.out.println(a);
+			 System.out.println(statisticsRepository.getUserStatistic(a));
+		 }
 	}
 	public void mainScreen()
 	{
@@ -89,11 +101,13 @@ public class GameView {
 	public void inGameMenuScreen()
 	{
 		System.out.println(user);
+		System.out.println(user.getModeString());
 		System.out.println("1 - Play");
 		System.out.println("2 - Deposit Money");
 		System.out.println("3 - Withdraw Money");
 		System.out.println("4 - Statistics");
-		System.out.println("5 - LogOut");
+		System.out.println("5 - To Change Mode");
+		System.out.println("Q - LogOut");
 		String select = s.nextLine();
 		switch (select)
 		{
@@ -110,6 +124,11 @@ public class GameView {
 			statisticsScreen();
 			break;
 		case "5":
+			user.changeMode();
+			inGameMenuScreen();
+			break;
+		case "Q":
+		case "q":
 			mainScreen();
 			break;
 	    default:
@@ -194,6 +213,7 @@ public class GameView {
 	}
 	public void depositScreen()
 	{
+		System.out.println(user.getModeString());
 		System.out.println("~Deposit~");
 		System.out.println(user);
 		System.out.println("Enter Amount To Deposit: ");
@@ -208,6 +228,7 @@ public class GameView {
 	}
 	public void withdrawScreen()
 	{
+		System.out.println(user.getModeString());
 		System.out.println("~Withdraw~");
 		System.out.println(user);
 		System.out.println("Enter Amount To Withdraw: ");
@@ -224,7 +245,9 @@ public class GameView {
 	{
 		System.out.println("~Statistics~");
 		System.out.println(user);
-		System.out.print(Statistic.getUserStatistic(user.getuserId()));
+		StatisticsRepository statisticsRepository = StatisticsRepository.BuildStatisticsRepository();
+		System.out.println(statisticsRepository.getUserStatistic(user));
+		System.out.println(statisticsRepository.getUserStatistic(user).Check());
 		System.out.println("To Clear Statistics - clear");
 		System.out.println("Back - Any");
 		if(StatisticController.BuildStatisticController(user).statisticsController(s.nextLine()))
