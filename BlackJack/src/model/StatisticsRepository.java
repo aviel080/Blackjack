@@ -2,7 +2,7 @@ package model;
 
 import java.util.Set;
 
-public class StatisticsRepository {
+public class StatisticsRepository implements iRepository{
 	private static StatisticsRepository statisticsRepository;
 	private FileManager<Statistic> fileManager;
 	private Set<Statistic> statistics;
@@ -54,6 +54,15 @@ public class StatisticsRepository {
 			System.exit(1);
 		}
 		return null;
-
+	}
+	public void clean()
+	{
+		statistics.clear();
+		try{
+		fileManager.write(statistics);
+		}catch(Exception e){
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 }

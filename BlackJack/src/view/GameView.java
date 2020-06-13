@@ -23,8 +23,6 @@ public class GameView {
 			RegisterContoller.BuildRegisterContoller().signupController(String.valueOf(num), "password");
 		}
 		*/
-		gameView.Check();
-		gameView.mainScreen();
 	}
 	public void Check()
 	{  

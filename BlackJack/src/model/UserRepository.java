@@ -2,7 +2,7 @@ package model;
 
 import java.util.Set;
 
-public class UserRepository {
+public class UserRepository implements iRepository{
 	private static UserRepository userRepository;
 	private FileManager<User> fileManager;
 	private Set<User> users;
@@ -50,5 +50,15 @@ public class UserRepository {
 				return a;
 		}
 		return null;
+	}
+	public void clean()
+	{
+		users.clear();
+		try{
+		fileManager.write(users);
+		}catch(Exception e){
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 }

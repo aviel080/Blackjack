@@ -1,5 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import model.*;
@@ -8,8 +9,6 @@ import model.*;
 class GameManagerTests 
 {
 	private GameManager game;
-	private Player player;
-	private Dealer dealer;
 
 	@Test
 	void testWinMoreThanTheDealer() 
@@ -143,5 +142,10 @@ class GameManagerTests
 		}catch (Exception e) {
 			assertEquals("Spaces Not Allowed", e.getMessage());
 		}
+	}
+	@After
+	void clean()
+	{
+		System.out.println("Check");
 	}
 }
