@@ -1,7 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import model.*;
 
@@ -9,7 +9,21 @@ import model.*;
 class GameManagerTests 
 {
 	private GameManager game;
-
+	private static iRepository [] repositories;
+	
+	@BeforeAll
+	public static void startUp ()
+	{
+		repositories = new iRepository[2];
+		repositories[0] = UserRepository.BuildUserRepository();
+		repositories[1] = StatisticsRepository.BuildStatisticsRepository();
+	}
+	@AfterEach
+	public void clean()
+	{
+		repositories[0].clean();
+		repositories[1].clean();
+	}
 	@Test
 	void testWinMoreThanTheDealer() 
 	{
@@ -143,9 +157,72 @@ class GameManagerTests
 			assertEquals("Spaces Not Allowed", e.getMessage());
 		}
 	}
-	@After
-	void clean()
+	@Test
+	void userNameLessThan3()
 	{
-		System.out.println("Check");
+		SignUpManager signUpManager = new SignUpManager();
+		try {
+		signUpManager.signNewUser("12", "password");
+		fail("FAIL");
+		}catch (Exception e) {
+			assertEquals("UserName Length Less Than 3 Letters", e.getMessage());
+		}
+	}
+	@Test
+	void userNameMoreThan10()
+	{
+		SignUpManager signUpManager = new SignUpManager();
+		try {
+		signUpManager.signNewUser("12345678910", "password");
+		fail("FAIL");
+		}catch (Exception e) {
+			assertEquals("UserName Length More Than 10 Letters", e.getMessage());
+		}
+	}
+	@Test
+	void passwordLessThan3()
+	{
+		SignUpManager signUpManager = new SignUpManager();
+		try {
+		signUpManager.signNewUser("user", "12");
+		fail("FAIL");
+		}catch (Exception e) {
+			assertEquals("Password Length Less Than 3 Letters", e.getMessage());
+		}
+	}
+	@Test
+	void passwordMoreThan10()
+	{
+		SignUpManager signUpManager = new SignUpManager();
+		try {
+		signUpManager.signNewUser("user", "12345678910");
+		fail("FAIL");
+		}catch (Exception e) {
+			assertEquals("Password Length More Than 10 Letters", e.getMessage());
+		}
+	}
+	@Test
+	void userNameAvailable()
+	{
+		SignUpManager signUpManager = new SignUpManager();
+		try {
+		signUpManager.signNewUser("user", "123");
+		signUpManager.signNewUser("user", "123");
+		fail("FAIL");
+		}catch (Exception e) {
+			assertEquals("Username Already Exists", e.getMessage());
+		}
+	}
+	@Test
+	void userNameAvailableUpperCase()
+	{
+		SignUpManager signUpManager = new SignUpManager();
+		try {
+		signUpManager.signNewUser("user", "123");
+		signUpManager.signNewUser("User", "123");
+		fail("FAIL");
+		}catch (Exception e) {
+			assertEquals("Username Already Exists", e.getMessage());
+		}
 	}
 }
