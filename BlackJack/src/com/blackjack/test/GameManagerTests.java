@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.blackjack.controller.GameController;
@@ -22,12 +23,20 @@ class GameManagerTests
 	private LoginManager loginManager = new LoginManager();
 	private ChargeManager chargeManager = new ChargeManager();
 	private GameController gameController = null;
+	private Player player;
+	private Dealer dealer;
 	@BeforeAll
 	public static void startUp ()
 	{
 		repositories = new iRepository[2];
 		repositories[0] = UserRepository.BuildUserRepository();
 		repositories[1] = StatisticsRepository.BuildStatisticsRepository();
+	}
+	@BeforeEach
+	public void newDealerPlayer()
+	{
+		player = new Player();
+		dealer = new Dealer();
 	}
 	@AfterEach
 	public void clean()
@@ -38,8 +47,6 @@ class GameManagerTests
 	@Test
 	void testWinMoreThanTheDealer() 
 	{
-		Player player = new Player();
-		Dealer dealer = new Dealer();
 		player.pushCard(new Card(10,"HEARTS"));
 		player.pushCard(new Card(9,"HEARTS"));
 		dealer.pushCard(new Card(10,"HEARTS"));
@@ -53,8 +60,6 @@ class GameManagerTests
 	@Test
 	void testLoseLessThanTheDealer() 
 	{
-		Player player = new Player();
-		Dealer dealer = new Dealer();
 		player.pushCard(new Card(10,"HEARTS"));
 		player.pushCard(new Card(8,"HEARTS"));
 		dealer.pushCard(new Card(10,"HEARTS"));
@@ -68,8 +73,6 @@ class GameManagerTests
 	@Test
 	void testWinDealerBurns() 
 	{
-		Player player = new Player();
-		Dealer dealer = new Dealer();
 		player.pushCard(new Card(10,"HEARTS"));
 		player.pushCard(new Card(9,"HEARTS"));
 		dealer.pushCard(new Card(10,"HEARTS"));
@@ -84,8 +87,6 @@ class GameManagerTests
 	@Test
 	void testLosePlayerBurns() 
 	{
-		Player player = new Player();
-		Dealer dealer = new Dealer();
 		player.pushCard(new Card(10,"HEARTS"));
 		player.pushCard(new Card(8,"HEARTS"));
 		player.pushCard(new Card(8,"HEARTS"));
@@ -100,8 +101,6 @@ class GameManagerTests
 	@Test
 	void testBlackJackTie() 
 	{
-		Player player = new Player();
-		Dealer dealer = new Dealer();
 		player.pushCard(new Card(10,"HEARTS"));
 		player.pushCard(new Card(1,"HEARTS"));
 		dealer.pushCard(new Card(10,"HEARTS"));
@@ -115,8 +114,6 @@ class GameManagerTests
 	@Test
 	void testBlackJackWins() 
 	{
-		Player player = new Player();
-		Dealer dealer = new Dealer();
 		player.pushCard(new Card(10,"HEARTS"));
 		player.pushCard(new Card(1,"HEARTS"));
 		dealer.pushCard(new Card(10,"HEARTS"));
@@ -130,8 +127,6 @@ class GameManagerTests
 	@Test
 	void testBlackJackLose() 
 	{
-		Player player = new Player();
-		Dealer dealer = new Dealer();
 		player.pushCard(new Card(10,"HEARTS"));
 		player.pushCard(new Card(10,"HEARTS"));
 		dealer.pushCard(new Card(1,"HEARTS"));
@@ -145,8 +140,6 @@ class GameManagerTests
 	@Test
 	void testTie() 
 	{
-		Player player = new Player();
-		Dealer dealer = new Dealer();
 		player.pushCard(new Card(10,"HEARTS"));
 		player.pushCard(new Card(9,"HEARTS"));
 		dealer.pushCard(new Card(10,"HEARTS"));
@@ -160,7 +153,6 @@ class GameManagerTests
 	@Test
 	void userNameSpace()
 	{
-		SignUpManager signUpManager = new SignUpManager();
 		try {
 		signUpManager.signNewUser("ab c", "password");
 		fail("FAIL");
@@ -171,7 +163,6 @@ class GameManagerTests
 	@Test
 	void userNameLessThan3()
 	{
-		SignUpManager signUpManager = new SignUpManager();
 		try {
 		signUpManager.signNewUser("12", "password");
 		fail("FAIL");
@@ -182,7 +173,6 @@ class GameManagerTests
 	@Test
 	void userNameMoreThan10()
 	{
-		SignUpManager signUpManager = new SignUpManager();
 		try {
 		signUpManager.signNewUser("12345678910", "password");
 		fail("FAIL");
@@ -193,7 +183,6 @@ class GameManagerTests
 	@Test
 	void passwordLessThan3()
 	{
-		SignUpManager signUpManager = new SignUpManager();
 		try {
 		signUpManager.signNewUser("user", "12");
 		fail("FAIL");
@@ -204,7 +193,6 @@ class GameManagerTests
 	@Test
 	void passwordMoreThan10()
 	{
-		SignUpManager signUpManager = new SignUpManager();
 		try {
 		signUpManager.signNewUser("user", "12345678910");
 		fail("FAIL");
@@ -215,7 +203,6 @@ class GameManagerTests
 	@Test
 	void userNameAvailable()
 	{
-		SignUpManager signUpManager = new SignUpManager();
 		try {
 		signUpManager.signNewUser("user", "123");
 		signUpManager.signNewUser("user", "123");
@@ -227,7 +214,6 @@ class GameManagerTests
 	@Test
 	void userNameAvailableUpperCase()
 	{
-		SignUpManager signUpManager = new SignUpManager();
 		try {
 		signUpManager.signNewUser("user", "123");
 		signUpManager.signNewUser("User", "123");
@@ -239,7 +225,6 @@ class GameManagerTests
 	@Test
 	void userExists()
 	{
-		LoginManager loginManager = new LoginManager();
 		try {
 			loginManager.userLogin("123", "password");
 			fail("FAIL");
@@ -251,8 +236,6 @@ class GameManagerTests
 	@Test
 	void passwordMatch()
 	{
-		SignUpManager signUpManager = new SignUpManager();
-		LoginManager loginManager = new LoginManager();
 		try {
 			signUpManager.signNewUser("123", "123");
 			loginManager.userLogin("123", "password");
@@ -265,10 +248,6 @@ class GameManagerTests
 	@Test
 	void chargeManagerTests()
 	{
-		User user = null;
-		SignUpManager signUpManager = new SignUpManager();
-		LoginManager loginManager = new LoginManager();
-		ChargeManager chargeManager = new ChargeManager();
 		try {
 			signUpManager.signNewUser("123", "123");
 			user = loginManager.userLogin("123", "123");		
@@ -375,8 +354,6 @@ class GameManagerTests
 	@Test
 	void splitTest()
 	{
-		Player player = new Player();
-		Dealer dealer = new Dealer();
 		player.pushCard(new Card(10,"HEARTS"));
 		dealer.pushCard(new Card(10,"HEARTS"));
 		dealer.pushCard(new Card(9,"HEARTS"));
@@ -410,8 +387,6 @@ class GameManagerTests
 	@Test
 	void hitTest()
 	{
-		Player player = new Player();
-		Dealer dealer = new Dealer();
 		player.pushCard(new Card(10,"HEARTS"));
 		dealer.pushCard(new Card(10,"HEARTS"));
 		dealer.pushCard(new Card(9,"HEARTS"));
@@ -423,8 +398,6 @@ class GameManagerTests
 	@Test
 	void surrenderTest()
 	{
-		Player player = new Player();
-		Dealer dealer = new Dealer();
 		game = new GameManager(player,dealer);
 		game.startTurn();
 		assertEquals(false,game.playerSurrender());
@@ -433,8 +406,6 @@ class GameManagerTests
 	@Test
 	void doubleTest()
 	{
-		Player player = new Player();
-		Dealer dealer = new Dealer();
 		game = new GameManager(player,dealer);
 		player.pushCard(new Card(10,"HEARTS"));//1
 		try {
