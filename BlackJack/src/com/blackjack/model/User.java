@@ -12,11 +12,11 @@ public class User implements Serializable  {
 	private static final long serialVersionUID = 1L;
 	private String userName;
 	private String password;
-	private int virtualMoney;
-	private int realMoney;
+	private long virtualMoney;
+	private long realMoney;
 	private boolean realPlay;
 	
-	public User(String userName, String password, int virtualMoney,int realMoney, boolean realPlay) 
+	public User(String userName, String password, long virtualMoney,long realMoney, boolean realPlay) 
 	{
 		this.userName = userName;
 		this.password = password;
@@ -35,11 +35,10 @@ public class User implements Serializable  {
 	public void addBalance(int amount) {
 		if (realPlay)
 			realMoney += amount;
-
 		else
 			virtualMoney += amount;
 	}
-	public int getBalance()
+	public long getBalance()
 	{
 		if (realPlay)
 			return realMoney;

@@ -15,7 +15,6 @@ public class GameController {
 	private StatisticsRepository statisticsRepository;
 	private GameController() {
 		statisticsRepository = StatisticsRepository.BuildStatisticsRepository();
-		chargeManager = new ChargeManager();
 	}
 	public static GameController BuildController(User user)
 	{	
@@ -23,13 +22,15 @@ public class GameController {
 			gameController = new GameController();
 		gameController.user = user;
 		gameController.userStatistics = gameController.statisticsRepository.getUserStatistic(user);
+		gameController.chargeManager = new ChargeManager(user);
 		return gameController;
 	}
-	public GameManager playController(String betAmount) throws Exception
+	public GameManager playController(int betAmount) throws Exception
 	{
-		chargeManager.Withdraw(user, betAmount);		
-		int bet = Integer.parseInt(betAmount);
-		game = new GameManager(bet, user.getMode());
+		if (betAmount > 99999999)
+			throw new NumberFormatException();
+		chargeManager.Withdraw(betAmount);		
+		game = new GameManager(betAmount, user.getMode());
 		game.startTurn();
 		return game;
 	}
@@ -39,7 +40,12 @@ public class GameController {
 	}
 	public void endController()
 	{
-		chargeManager.Deposit(user, game.calcMoney());
+		try {
+			chargeManager.Deposit(game.calcMoney());
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 		userStatistics.updateStatistic(game.checkHandResult(1));
 		if(game.isSplit())
 			userStatistics.updateStatistic(game.checkHandResult(2));
@@ -54,7 +60,7 @@ public class GameController {
 		if(user.getBalance() < game.getBetAmount(1))
 			throw new Exception("Not Enough Money");
 		game.playerSplit();
-		chargeManager.Withdraw(user,game.getBetAmount(1));
+		chargeManager.Withdraw(game.getBetAmount(1));
 		game.setBetAmount(game.getBetAmount(1) , 2);
 	}
 	public void doubleController() throws Exception
@@ -63,7 +69,7 @@ public class GameController {
 		if(user.getBalance() < game.getBetAmount(hand))
 			throw new Exception("Not Enough Money");
 		game.playerDouble();
-		chargeManager.Withdraw(user, game.getBetAmount(hand));
+		chargeManager.Withdraw(game.getBetAmount(hand));
 		game.setBetAmount(game.getBetAmount(hand) * 2, hand);
 	}
 	public boolean surrenderController()

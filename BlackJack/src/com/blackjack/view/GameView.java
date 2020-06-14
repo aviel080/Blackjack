@@ -8,6 +8,8 @@ import com.blackjack.controller.StatisticController;
 import com.blackjack.model.GameManager;
 import com.blackjack.model.User;
 
+import jdk.management.resource.internal.UnassignedContext;
+
 
 public class GameView {
 	private static Scanner s = new Scanner(System.in);
@@ -75,10 +77,11 @@ public class GameView {
 		System.out.println(user);
 		System.out.println(user.getModeString());
 		System.out.println("1 - Play");
-		System.out.println("2 - Deposit Money");
-		System.out.println("3 - Withdraw Money");
-		System.out.println("4 - Statistics");
-		System.out.println("5 - To Change Mode");
+		System.out.println("2 - Auto Play");
+		System.out.println("3 - Deposit Money");
+		System.out.println("4 - Withdraw Money");
+		System.out.println("5 - Statistics");
+		System.out.println("6 - To Change Mode");
 		System.out.println("Q - LogOut");
 		String select = s.nextLine();
 		switch (select)
@@ -87,15 +90,18 @@ public class GameView {
 			betScreen();
 			break;
 		case "2":
-			depositScreen();
+			autoPlayScreen();
 			break;
 		case "3":
-			withdrawScreen();
+			depositScreen();
 			break;
 		case "4":
-			statisticsScreen();
+			withdrawScreen();
 			break;
 		case "5":
+			statisticsScreen();
+			break;
+		case "6":
 			user.changeMode();
 			inGameMenuScreen();
 			break;
@@ -113,12 +119,15 @@ public class GameView {
 		try {
 		System.out.println(user);
 		System.out.println("Enter Bet Amount: ");
-		String betAmount = s.nextLine();
+		int betAmount = Integer.parseUnsignedInt(s.nextLine());
 		game = gameController.playController(betAmount);
 		System.out.println("Succsefull Bet Amount : " + betAmount);
 		playScreen();
+		}catch(NumberFormatException e) {
+			System.out.println("Invalid Input Accept Integers Between 1 to 99999999");
+			inGameMenuScreen();
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println(e.getMessage());//withdraw
 			inGameMenuScreen();
 		}
 	}
@@ -189,12 +198,12 @@ public class GameView {
 		System.out.println("~Deposit~");
 		System.out.println(user);
 		System.out.println("Enter Amount To Deposit: ");
-		String amount = s.nextLine();
 		try {
+			int amount = Integer.parseInt(s.nextLine());
 			ChargeContoller.BuildChargeContoller(user).depositController(amount);
 			System.out.println("Succsefully Added " + amount);
-		}catch (Exception e) {
-			System.out.println(e.getMessage());
+		}catch(NumberFormatException e) {
+			System.out.println("Invalid Input Accept Integers Between 0 to " + Integer.MAX_VALUE);
 		}
 		inGameMenuScreen();
 	}
@@ -204,10 +213,12 @@ public class GameView {
 		System.out.println("~Withdraw~");
 		System.out.println(user);
 		System.out.println("Enter Amount To Withdraw: ");
-		String amount = s.nextLine();
 		try {
+			int amount = Integer.parseInt(s.nextLine());
 			ChargeContoller.BuildChargeContoller(user).withdrawController(amount);
 			System.out.println("Succsefully Taken " + amount);
+		} catch(NumberFormatException e) {
+			System.out.println("Invalid Input Accept Integers Between 1 to " + Integer.MAX_VALUE);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -223,6 +234,62 @@ public class GameView {
 		System.out.println("Back - Any");
 		if(statisticController.userClear(s.nextLine()))
 			statisticsScreen();
+		inGameMenuScreen();
+	}
+	public void autoPlayScreen()
+	{
+		long startMoney = user.getBalance();
+		int betAmount =0;
+		int rounds = 0;
+		int hit =0;
+		System.out.println(user);
+		System.out.println("Enter Bet Amount Per Round: ");
+		try {
+		betAmount = Integer.parseInt(s.nextLine());
+		if (betAmount <= 0 || betAmount > 99999999)
+			throw new NumberFormatException();
+		}catch (NumberFormatException e) {
+			System.out.println("\nBet Amount Need To Be Integers Between 1 to 99999999\n");
+			inGameMenuScreen();
+		}
+		System.out.println("Enter Number Of Rounds: ");
+		try {
+		rounds = Integer.parseInt(s.nextLine());
+		if (rounds <= 0 || rounds > 99999999)
+			throw new NumberFormatException();
+		}catch (NumberFormatException e) {
+			System.out.println("\nRounds Need To Be Integers Between 1 to 99999999\n");
+			inGameMenuScreen();
+		}
+		System.out.println("Enter Maximum Hand Value To Hit: ");
+		try {
+		hit = Integer.parseInt(s.nextLine());
+		if (hit <= 0 || hit > 21)
+			throw new NumberFormatException();
+		}catch (NumberFormatException e) {
+			System.out.println("\nThe Number Need To Be Integers Between 1 to 21\n");
+			inGameMenuScreen();
+		}
+		try {
+		for (int i=0;i< rounds;i++)
+		{
+			game = gameController.playController(betAmount);
+			System.out.println("Game Number: " + (i+1));
+			while (game.playerHandValue() <= hit)
+			{
+				gameController.hitController();
+			}
+			gameController.holdController();
+			gameController.endController();
+			System.out.println(game);
+			System.out.println(game.endTurn());
+		}
+		}catch(Exception e) {
+			System.out.println("\n" + e.getMessage() + "\n");
+		}
+		System.out.println("Started Money: " + startMoney + " End Money: " + user.getBalance() + " Money Profit: " + (user.getBalance() - startMoney));
+		StatisticController statisticController =  StatisticController.BuildStatisticController(user);
+		System.out.println(statisticController.getUserStatistics());
 		inGameMenuScreen();
 	}
 }

@@ -57,8 +57,7 @@ public class Statistic implements Serializable {
 	public String toString() {
 		String [] message = {"BlackJack","Win","Lose","Tie","Surrender"};
 		int [] numbers = {handsBlackjack,handsWin,handsLose,handsTie,handsSurrender}; 
-		String result = "";
-		result += userName + "\n";
+		String result = "\n";
 		result += "Hands Played: " + handsPlayed + "\n";
 		for (int i=0;i<5;i++) {
 			result += "Hands " + message[i] + ": " + numbers[i] +  " (" + calcPrecent(numbers[i]) + "%)\n";

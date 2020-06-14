@@ -5,23 +5,23 @@ import com.blackjack.model.User;
 
 public class ChargeContoller {
 	private static ChargeContoller chargeContoller = null;
-	private ChargeManager chargeManager = new ChargeManager();
-	private User user;
+	private ChargeManager chargeManager;
 	private ChargeContoller() {
 	}
 	public static ChargeContoller BuildChargeContoller(User user)
 	{	
 		if (chargeContoller == null)
 			chargeContoller = new ChargeContoller();
-		chargeContoller.user = user;
+		chargeContoller.chargeManager = new ChargeManager(user);
 		return chargeContoller;
 	}
-	public void depositController(String amount) throws Exception
+	public void depositController(int amount) throws NumberFormatException
 	{
-		chargeManager.Deposit(user, amount);
+		chargeManager.Deposit(amount);
+		chargeManager.updateDepositHistory(amount);
 	}
-	public void withdrawController(String amount) throws Exception
+	public void withdrawController(int amount) throws Exception
 	{
-		chargeManager.Withdraw(user, amount);
+		chargeManager.Withdraw(amount);
 	}
 }

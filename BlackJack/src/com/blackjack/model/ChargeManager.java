@@ -1,44 +1,34 @@
 package com.blackjack.model;
 
 public class ChargeManager {
-	private UserRepository userRepository = UserRepository.BuildUserRepository();
-	private StatisticsRepository statisticsRepository = StatisticsRepository.BuildStatisticsRepository();
-	public void Withdraw(User user,String amount)throws Exception {
-		invalidInput(amount);
-		int validAmount = Integer.parseInt(amount);
-		if (validAmount == 0)
-			throw new Exception("0 Cant Be Input");
-		if (validAmount > user.getBalance())
-			throw new Exception("Amount Less Than Money");
-		Withdraw(user,validAmount);
+	private UserRepository userRepository;
+	private StatisticsRepository statisticsRepository;
+	private User user;
+	public ChargeManager(User user) {
+		userRepository = UserRepository.BuildUserRepository();
+		statisticsRepository = StatisticsRepository.BuildStatisticsRepository();
+		this.user = user;
 	}
-	public void Withdraw(User user,int amount) {
+	public void Withdraw(int amount)throws Exception {
+		if (amount <= 0)
+			throw new NumberFormatException();
+		if (amount > user.getBalance())
+			throw new Exception("Amount Less Than Money");
 		user.addBalance(-amount);
 		userRepository.Update(user);
 	}
-	public void Deposit(User user, String amount)throws Exception {
-		invalidInput(amount);
-		int validAmount = Integer.parseInt(amount);
-		Deposit(user,validAmount);
-		if (user.getMode())
-		{
-			statisticsRepository.getUserStatistic(user).updateDepositHistory(validAmount);
-			statisticsRepository.Update(statisticsRepository.getUserStatistic(user));
-		}
-	}
-	public void Deposit(User user, int amount)
-	{
+	public void Deposit(int amount)throws NumberFormatException {
+		if (amount < 0)
+			throw new NumberFormatException();
 		user.addBalance(amount);
 		userRepository.Update(user);
 	}
-	private void invalidInput(String amount) throws Exception
+	public void updateDepositHistory(int amount)
 	{
-		if (amount.equals(""))
-			throw new Exception ("No Input");
-		for (char a : amount.toCharArray())
+		if (user.getMode())
 		{
-			if (Character.isDigit(a) == false)
-				throw new Exception ("Invalid Amount");
+			statisticsRepository.getUserStatistic(user).updateDepositHistory(amount);
+			statisticsRepository.Update(statisticsRepository.getUserStatistic(user));
 		}
 	}
 }

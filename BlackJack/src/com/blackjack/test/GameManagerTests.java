@@ -3,6 +3,7 @@ package com.blackjack.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,7 +22,7 @@ class GameManagerTests
 	private String [] message = {"BlackJack","Win","Tie","Surrender","Lose"};
 	private SignUpManager signUpManager = new SignUpManager();
 	private LoginManager loginManager = new LoginManager();
-	private ChargeManager chargeManager = new ChargeManager();
+	private ChargeManager chargeManager;
 	private GameController gameController = null;
 	private Player player;
 	private Dealer dealer;
@@ -250,64 +251,57 @@ class GameManagerTests
 	{
 		try {
 			signUpManager.signNewUser("123", "123");
-			user = loginManager.userLogin("123", "123");		
-			chargeManager.Deposit(user, "100");
+			user = loginManager.userLogin("123", "123");
+			chargeManager = new ChargeManager(user);
+			chargeManager.Deposit(100);
 			assertEquals(100,user.getBalance());
-			chargeManager.Withdraw(user, "50");
+			chargeManager.Withdraw(50);
 			assertEquals(50, user.getBalance());
 		}	catch (Exception e) {
 			fail("UnWanted Exception");
 		}
 		try {
-			chargeManager.Withdraw(user, "52");
+			chargeManager.Withdraw(52);
 		}catch (Exception e) {
 			assertEquals("Amount Less Than Money",e.getMessage());
 		}
 		try {
-			chargeManager.Withdraw(user, "0");
+			chargeManager.Withdraw(0);
 		}catch (Exception e) {
-			assertEquals("0 Cant Be Input",e.getMessage());
 		}
 		try {
-			chargeManager.Deposit(user, "-100");
-		}catch (Exception e) {
-			assertEquals("Invalid Amount",e.getMessage());
+			chargeManager.Deposit(-100);
+		}catch (NumberFormatException e) {		
 		}
 		try {
-			chargeManager.Withdraw(user, "-100");
+			chargeManager.Withdraw(-100);
+		}catch (NumberFormatException e) {
 		}catch (Exception e) {
-			assertEquals("Invalid Amount",e.getMessage());
-		}
-		try {
-			chargeManager.Deposit(user, "");
-		}catch (Exception e) {
-			assertEquals("No Input",e.getMessage());
-		}
-		try {
-			chargeManager.Withdraw(user, "");
-		}catch (Exception e) {
-			assertEquals("No Input",e.getMessage());
+			fail();
 		}
 	}
 	@Test
 	void statisticsTest() throws Exception
 	{
-		int money = 0;
+		long money = 0;
 		int betAmount = 100;
 		int [] counters = new int [5];
 		int handsPlayed = 0;
 		try {
 		signUpManager.signNewUser("eyal", "123");
 		user = loginManager.userLogin("eyal", "123");
-		chargeManager.Deposit(user, "1000000");
+		chargeManager = new ChargeManager(user);
+		chargeManager.Deposit(1000000);
 		gameController = GameController.BuildController(user);
 		}catch (Exception e) {
+			e.printStackTrace();
 			fail("UnWanted Exception");
 		}
-		for (int i=0;i<100;i++)
+		for (int i=0;i<1000;i++)
 		{
-			game = gameController.playController(String.valueOf(betAmount));
+			game = gameController.playController(betAmount);
 			money = user.getBalance();
+			gameController.hitController();
 			gameController.holdController();
 			gameController.endController();
 			handsPlayed++;
@@ -428,5 +422,24 @@ class GameManagerTests
 		}
 		assertEquals(3, player.handSize());
 		assertEquals(true, dealer.handValue() >= 17);
+	}
+	@Test
+	void calcMoneyTest()
+	{
+		int betAmount = 99999999;
+		game = new GameManager(player, dealer);
+		game.setBetAmount(betAmount, 1);
+		game.setBetAmount(betAmount, 2);
+		player.pushCard(new Card(1,"HEARTS"));
+		player.pushCard(new Card(10,"HEARTS"));
+		player.secondHandPushCard(new Card(1,"HEARTS"));
+		player.secondHandPushCard(new Card(10,"HEARTS"));
+		dealer.pushCard(new Card(10,"HEARTS"));
+		dealer.pushCard(new Card(10,"HEARTS"));
+		game.setBetAmount(betAmount *2, 1);
+		game.setBetAmount(betAmount *2, 2);
+		System.out.println(game.endTurn());
+		System.out.println(game.calcMoney());
+		assertTrue(game.calcMoney() > 0);
 	}
 }

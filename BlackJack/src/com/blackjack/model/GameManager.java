@@ -14,7 +14,6 @@ public class GameManager {
 		this.player = player;
 		this.dealer = dealer;
 		betAmount[0] = 100;
-		this.realMoneyMode = false;
 	}
 	//Test
 	public GameManager(int betAmount,boolean realMoneyMode)
@@ -151,11 +150,11 @@ public class GameManager {
 	{
 		String result = "";
 		String Hand1 = checkHandResult(1);
-		result += "Hand 1: " + Hand1 + ",Gain: " + handResult(Hand1 , 1) + "\n";
+		result += "Hand 1: " + Hand1 + ",Gain: " + handResult(Hand1 , 1);
 		if (isSplit())
 		{
 			String Hand2 = checkHandResult(2);
-			result += "Hand 2: " + Hand2 + ",Gain: " + handResult(Hand2 , 2);
+			result += "\nHand 2: " + Hand2 + ",Gain: " + handResult(Hand2 , 2);
 		}
 		return result;
 	}
