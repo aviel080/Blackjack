@@ -237,51 +237,26 @@ public class GameView {
 	public void autoPlayScreen()
 	{
 		long startMoney = user.getBalance();
-		int betAmount =0;
-		int rounds = 0;
-		int hit =0;
+		try {
 		System.out.println(user);
 		System.out.println("Enter Bet Amount Per Round: ");
-		try {
-		betAmount = Integer.parseInt(s.nextLine());
+		System.out.println("Bet Amount Need To Be Integers Between 1 to 99999999");
+		int betAmount = Integer.parseInt(s.nextLine());
 		if (betAmount <= 0 || betAmount > 99999999)
 			throw new NumberFormatException();
-		}catch (NumberFormatException e) {
-			System.out.println("\nBet Amount Need To Be Integers Between 1 to 99999999\n");
-			inGameMenuScreen();
-		}
 		System.out.println("Enter Number Of Rounds: ");
-		try {
-		rounds = Integer.parseInt(s.nextLine());
-		if (rounds <= 0 || rounds > 99999999)
+		System.out.println("Rounds Need To Be Integers Between 1 to 999");
+		int rounds = Integer.parseInt(s.nextLine());
+		if (rounds <= 0 || rounds > 999)
 			throw new NumberFormatException();
-		}catch (NumberFormatException e) {
-			System.out.println("\nRounds Need To Be Integers Between 1 to 99999999\n");
-			inGameMenuScreen();
-		}
 		System.out.println("Enter Maximum Hand Value To Hit: ");
-		try {
-		hit = Integer.parseInt(s.nextLine());
+		System.out.println("The Number Need To Be Integers Between 1 to 21");
+		int hit = Integer.parseInt(s.nextLine());
 		if (hit <= 0 || hit > 21)
 			throw new NumberFormatException();
-		}catch (NumberFormatException e) {
-			System.out.println("\nThe Number Need To Be Integers Between 1 to 21\n");
-			inGameMenuScreen();
-		}
-		try {
-		for (int i=0;i< rounds;i++)
-		{
-			game = gameController.playController(betAmount);
-			System.out.println("Game Number: " + (i+1));
-			while (game.playerHandValue() <= hit)
-			{
-				gameController.hitController();
-			}
-			gameController.holdController();
-			gameController.endController();
-			System.out.println(game);
-			System.out.println(game.endTurn());
-		}
+		System.out.println(gameController.autoPlay(betAmount, rounds, hit));
+		}catch(NumberFormatException e) {
+			System.out.println("\n" + "Invalid Input" + "\n");
 		}catch(Exception e) {
 			System.out.println("\n" + e.getMessage() + "\n");
 		}

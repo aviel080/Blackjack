@@ -76,4 +76,26 @@ public class GameController {
 	{
 		return game.playerSurrender();
 	}
+	public String autoPlay(int betAmount,int rounds,int hit)
+	{
+		String result ="";
+		try {
+			for (int i=0;i< rounds;i++)
+			{
+				game = gameController.playController(betAmount);
+				result += "Game Number: " + (i+1) + "\n";
+				while (game.playerHandValue() <= hit)
+				{
+					gameController.hitController();
+				}
+				gameController.holdController();
+				gameController.endController();
+				result +=game + "\n";
+				result +=game.endTurn() + "\n";
+			}
+		}catch(Exception e) {
+			result += e.getMessage();
+		}
+		return result;
+	}
 }
