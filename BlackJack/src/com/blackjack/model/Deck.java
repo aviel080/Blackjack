@@ -35,7 +35,7 @@ public class Deck {
 	}
 	public Card pull()
 	{
-		if (deckCards.size() == 0)
+		if (getDeckSize() == 0)
 		{
 			addCards();
 		}
