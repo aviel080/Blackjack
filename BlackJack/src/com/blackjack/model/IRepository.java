@@ -1,5 +1,5 @@
 package com.blackjack.model;
 
-public interface iRepository {
+public interface IRepository {
 	public void clean();
 }

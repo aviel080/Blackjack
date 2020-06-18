@@ -17,7 +17,7 @@ import com.blackjack.model.*;
 class GameManagerTests 
 {
 	private GameManager game = null;
-	private static iRepository [] repositories;
+	private static IRepository [] repositories;
 	private User user = null;
 	private String [] message = {"BlackJack","Win","Tie","Surrender","Lose"};
 	private SignUpManager signUpManager = new SignUpManager();
@@ -29,7 +29,7 @@ class GameManagerTests
 	@BeforeAll
 	public static void startUp ()
 	{
-		repositories = new iRepository[2];
+		repositories = new IRepository[2];
 		repositories[0] = UserRepository.BuildUserRepository();
 		repositories[1] = StatisticsRepository.BuildStatisticsRepository();
 	}

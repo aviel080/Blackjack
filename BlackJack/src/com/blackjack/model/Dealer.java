@@ -6,10 +6,6 @@ public class Dealer {
 	{
 		hand.addCard(card);
 	}
-	public void clearHand()
-	{
-		hand = new Hand();
-	}
 	public int handValue()
 	{
 		return hand.getHandValue();

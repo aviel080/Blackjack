@@ -9,6 +9,7 @@ public class RegisterContoller {
 	private LoginManager loginManager;
 	private SignUpManager signUpManager;
 	private User user;
+	
 	private RegisterContoller() {
 		loginManager= new LoginManager();
 		signUpManager= new SignUpManager();

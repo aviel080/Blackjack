@@ -2,8 +2,8 @@ package com.blackjack.model;
 
 import java.util.Set;
 
-public class UserRepository implements iRepository{
-	private static UserRepository userRepository;
+public class UserRepository implements IRepository{
+	private static UserRepository userRepository = null;
 	private FileManager<User> fileManager;
 	private Set<User> users;
 	@SuppressWarnings("unchecked")
@@ -33,10 +33,6 @@ public class UserRepository implements iRepository{
 			e.printStackTrace();
 			System.exit(1);
 		}
-	}
-	public int getSize()
-	{
-		return users.size();
 	}
 	public Set<User> getUsers()
 	{

@@ -8,6 +8,7 @@ public class StatisticController {
 	private static StatisticController statisticController = null;
 	private User user;
 	private StatisticsRepository statisticsRepository;
+	
 	private StatisticController() {
 		statisticsRepository = StatisticsRepository.BuildStatisticsRepository();
 	}

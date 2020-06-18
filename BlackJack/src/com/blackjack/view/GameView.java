@@ -10,7 +10,7 @@ import com.blackjack.model.User;
 
 
 public class GameView {
-	private static Scanner s = new Scanner(System.in);
+	private Scanner scanner = new Scanner(System.in);
 	private GameController gameController;
 	private User user;
 	private GameManager game;
@@ -21,7 +21,7 @@ public class GameView {
 		System.out.println("1 - Login");
 		System.out.println("2 - Signup");
 		System.out.println("Q - Quit");
-		String select= s.nextLine();
+		String select= scanner.nextLine();
 		switch (select){
 			case "1":
 				loginScreen();
@@ -43,9 +43,9 @@ public class GameView {
 		try {
 		System.out.println("~Login~");
 		System.out.println("Enter Username: ");
-		String username = s.nextLine();
+		String username = scanner.nextLine();
 		System.out.println("Enter Password: ");
-		String password = s.nextLine();
+		String password = scanner.nextLine();
 		user = RegisterContoller.BuildRegisterContoller().loginController(username, password);
 		gameController = GameController.BuildController(user);
 		System.out.println("Login Succesfully");
@@ -60,9 +60,9 @@ public class GameView {
 		try {
 		System.out.println("~SignUp~");
 		System.out.println("Enter Username: ");
-		String username = s.nextLine();
+		String username = scanner.nextLine();
 		System.out.println("Enter Password: ");
-		String password = s.nextLine();
+		String password = scanner.nextLine();
 		RegisterContoller.BuildRegisterContoller().signupController(username, password);
 		System.out.println("User Added Succsefully");
 		} catch(Exception e) {
@@ -81,7 +81,7 @@ public class GameView {
 		System.out.println("5 - Statistics");
 		System.out.println("6 - To Change Mode");
 		System.out.println("Q - LogOut");
-		String select = s.nextLine();
+		String select = scanner.nextLine();
 		switch (select)
 		{
 		case "1":
@@ -117,7 +117,7 @@ public class GameView {
 		try {
 		System.out.println(user);
 		System.out.println("Enter Bet Amount: ");
-		int betAmount = Integer.parseUnsignedInt(s.nextLine());
+		int betAmount = Integer.parseUnsignedInt(scanner.nextLine());
 		game = gameController.playController(betAmount);
 		System.out.println("Succsefull Bet Amount : " + betAmount);
 		playScreen();
@@ -139,7 +139,7 @@ public class GameView {
 		System.out.println("3 - Double");
 		System.out.println("4 - Split");
 		System.out.println("5 - Surrender");
-		String select = s.nextLine();
+		String select = scanner.nextLine();
 		switch (select)
 		{
 		case "1":
@@ -197,7 +197,7 @@ public class GameView {
 		System.out.println(user);
 		System.out.println("Enter Amount To Deposit: ");
 		try {
-			int amount = Integer.parseInt(s.nextLine());
+			int amount = Integer.parseInt(scanner.nextLine());
 			ChargeContoller.BuildChargeContoller(user).depositController(amount);
 			System.out.println("Succsefully Added " + amount);
 		}catch(NumberFormatException e) {
@@ -212,7 +212,7 @@ public class GameView {
 		System.out.println(user);
 		System.out.println("Enter Amount To Withdraw: ");
 		try {
-			int amount = Integer.parseInt(s.nextLine());
+			int amount = Integer.parseInt(scanner.nextLine());
 			ChargeContoller.BuildChargeContoller(user).withdrawController(amount);
 			System.out.println("Succsefully Taken " + amount);
 		} catch(NumberFormatException e) {
@@ -230,7 +230,7 @@ public class GameView {
 		System.out.println(statisticController.getUserStatistics());
 		System.out.println("To Clear Statistics - clear");
 		System.out.println("Back - Any");
-		if(statisticController.userClear(s.nextLine()))
+		if(statisticController.userClear(scanner.nextLine()))
 			statisticsScreen();
 		inGameMenuScreen();
 	}
@@ -241,17 +241,17 @@ public class GameView {
 		System.out.println(user);
 		System.out.println("Enter Bet Amount Per Round: ");
 		System.out.println("Bet Amount Need To Be Integers Between 1 to 99999999");
-		int betAmount = Integer.parseInt(s.nextLine());
+		int betAmount = Integer.parseInt(scanner.nextLine());
 		if (betAmount <= 0 || betAmount > 99999999)
 			throw new NumberFormatException();
 		System.out.println("Enter Number Of Rounds: ");
 		System.out.println("Rounds Need To Be Integers Between 1 to 999");
-		int rounds = Integer.parseInt(s.nextLine());
+		int rounds = Integer.parseInt(scanner.nextLine());
 		if (rounds <= 0 || rounds > 999)
 			throw new NumberFormatException();
 		System.out.println("Enter Maximum Hand Value To Hit: ");
 		System.out.println("The Number Need To Be Integers Between 1 to 21");
-		int hit = Integer.parseInt(s.nextLine());
+		int hit = Integer.parseInt(scanner.nextLine());
 		if (hit <= 0 || hit > 21)
 			throw new NumberFormatException();
 		System.out.println(gameController.autoPlay(betAmount, rounds, hit));

@@ -7,18 +7,20 @@ import lombok.Getter;
 public class Statistic implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private int handsPlayed = 0;
-	private int handsBlackjack = 0;
-	private int handsWin = 0;
-	private int handsLose = 0;
-	private int handsTie = 0;	
-	private int handsSurrender = 0;
-	private int depositHistory =0;
+	private int handsPlayed;
+	private int handsBlackjack;
+	private int handsWin;
+	private int handsLose;
+	private int handsTie;	
+	private int handsSurrender;
+	private int depositHistory;
 	private String userName;
 	
 	public Statistic(String userName)
 	{
 		this.userName = userName;
+		clearStatistics();
+		this.depositHistory =0;
 	}
 	public void updateDepositHistory(int amount)
 	{

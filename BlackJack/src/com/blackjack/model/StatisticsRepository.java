@@ -2,8 +2,8 @@ package com.blackjack.model;
 
 import java.util.Set;
 
-public class StatisticsRepository implements iRepository{
-	private static StatisticsRepository statisticsRepository;
+public class StatisticsRepository implements IRepository{
+	private static StatisticsRepository statisticsRepository = null;
 	private FileManager<Statistic> fileManager;
 	private Set<Statistic> statistics;
 	@SuppressWarnings("unchecked")

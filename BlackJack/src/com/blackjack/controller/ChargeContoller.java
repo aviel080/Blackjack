@@ -6,6 +6,7 @@ import com.blackjack.model.User;
 public class ChargeContoller {
 	private static ChargeContoller chargeContoller = null;
 	private ChargeManager chargeManager;
+	
 	private ChargeContoller() {
 	}
 	public static ChargeContoller BuildChargeContoller(User user)
