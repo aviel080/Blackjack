@@ -26,6 +26,7 @@ class GameManagerTests
 	private GameController gameController = null;
 	private Player player;
 	private Dealer dealer;
+	
 	@BeforeAll
 	public static void startUp ()
 	{
@@ -281,7 +282,7 @@ class GameManagerTests
 		}
 	}
 	@Test
-	void statisticsTest() throws Exception
+	void statisticsTest()
 	{
 		long money = 0;
 		int betAmount = 100;
@@ -299,7 +300,11 @@ class GameManagerTests
 		}
 		for (int i=0;i<1000;i++)
 		{
+			try {
 			game = gameController.playController(betAmount);
+			}catch (Exception e) {
+				fail("UnWanted Exception");
+			}
 			money = user.getBalance();
 			gameController.hitController();
 			gameController.holdController();
@@ -441,5 +446,21 @@ class GameManagerTests
 		System.out.println(game.endTurn());
 		System.out.println(game.calcMoney());
 		assertTrue(game.calcMoney() > 0);
+	}
+	@Test
+	void autoPlayTest()
+	{
+		System.out.println("AutoPlay");
+		try {
+		signUpManager.signNewUser("eyal", "123");
+		user = loginManager.userLogin("eyal", "123");
+		chargeManager = new ChargeManager(user);
+		chargeManager.Deposit(100000000);
+		}catch (Exception e) {
+			fail("UnWanted Exception");
+		}
+		gameController = GameController.BuildController(user);
+		gameController.autoPlay(100, 1000, 10);
+		System.out.println(StatisticsRepository.BuildStatisticsRepository().getUserStatistic(user));
 	}
 }

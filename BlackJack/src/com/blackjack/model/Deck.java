@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Deck {
 	private static Deck gameDeck= null;
-	private ArrayList<Card> deckCards = new ArrayList<Card>();
+	private List<Card> deckCards = new LinkedList<Card>();
 	private Deck()
 	{
 		addCards();
