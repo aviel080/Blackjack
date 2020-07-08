@@ -3,6 +3,6 @@
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="BlackJack/src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Switchback/Downloads/lombok.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Aviel/Downloads/lombok.jar"/>
 	<classpathentry kind="output" path="BlackJack/bin"/>
 </classpath>
