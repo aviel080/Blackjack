@@ -161,10 +161,10 @@ class GameManagerTests
 		}catch (Exception e) {
 			assertEquals("Spaces Not Allowed", e.getMessage());
 		}
-	}
+	}//
 	@Test
 	void userNameLessThan3()
-	{
+	{ 
 		try {
 		signUpManager.signNewUser("12", "password");
 		fail("FAIL");
