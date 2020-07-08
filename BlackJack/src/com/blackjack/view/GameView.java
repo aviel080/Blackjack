@@ -247,7 +247,7 @@ public class GameView {
 		System.out.println("Enter Number Of Rounds: ");
 		System.out.println("Rounds Need To Be Integers Between 1 to 999");
 		int rounds = Integer.parseInt(scanner.nextLine());
-		if (rounds <= 0 || rounds > 99999)
+		if (rounds <= 0 || rounds > 999)
 			throw new NumberFormatException();
 		System.out.println("Enter Maximum Hand Value To Hit: ");
 		System.out.println("The Number Need To Be Integers Between 1 to 21");

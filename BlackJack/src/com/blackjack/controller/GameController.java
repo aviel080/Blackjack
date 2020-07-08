@@ -83,15 +83,15 @@ public class GameController {
 			for (int i=0;i< rounds;i++)
 			{
 				game = gameController.playController(betAmount);
-				result.concat("Game Number: " + (i+1) + "\n");
+				result += "Game Number: " + (i+1) + "\n";
 				while (game.playerHandValue() <= hit)
 				{
 					gameController.hitController();
 				}
 				gameController.holdController();
 				gameController.endController();
-				result.concat(game + "\n");
-				result.concat(game.endTurn() + "\n");
+				result += game + "\n";
+				result += game.endTurn() + "\n";
 			}
 		}catch(Exception e) {
 			result += e.getMessage();

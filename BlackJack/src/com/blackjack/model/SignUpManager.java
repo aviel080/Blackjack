@@ -13,10 +13,10 @@ public class SignUpManager {
 		userNameValidation(userName);
 		passwordValidation(password);
 		userNameAvailable(userName);
-		UserBuilder newUser = new UserBuilder();
-		newUser.userName(userName);
-		newUser.password(password);
-		User user =	newUser.build();
+		User user = new UserBuilder()
+		       .userName(userName)
+		       .password(password)
+		 	   .build();
 		userRepository.Update(user);
 		statisticsRepository.Update(new Statistic(user.getUserName()));
 	}	
